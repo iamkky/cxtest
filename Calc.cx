@@ -1,0 +1,192 @@
+#include <string.h>
+#include "abd/printf.h"
+
+//HEADERX(Calc,_HTE_CALC_COMPONENT_H_)
+#include <awtk/HComponent.h>
+
+Class(Calc) {
+	HComponent_st	hcomponent;
+	double		display;
+	double		last;
+	char		lastOper;
+	int		decimalFlag;
+};
+
+Constructor(Calc);
+Destructor(Calc);
+
+He calcRender(HComponent self);
+int	  calcClickHandler(void *component, char *value);
+
+//ENDX
+
+Constructor(Calc)
+{
+	CInit(Calc);
+	HComponentConstructor((HComponent)self);
+
+	self->hcomponent.render = calcRender;
+
+	self->display = 0.0;
+	self->last = 0.0;
+	self->lastOper = ' ';
+	self->decimalFlag = 0;
+
+
+	return self;
+}
+
+Destructor(Calc)
+{
+	free(self);
+}
+
+int calcClickHandler(void *component, char *value)
+{
+Calc self = (Calc)component;
+
+	switch(*value){
+	case '+':
+	case '-':
+	case 'x':
+	case '/':
+			self->last = self->display;
+			self->lastOper = *value;
+			self->display = 0.0;
+			self->decimalFlag = 0;
+			break;
+	case 'S':
+			self->display = -(self->display);
+			break;
+	case 'C':
+			self->last = 0.0;
+			self->lastOper = ' ';
+	case 'X':	
+			self->display = 0.0;
+			break;
+	case '.':
+			self->decimalFlag = 10;
+			break;
+	case '=':
+			switch(self->lastOper){
+			case '+': self->display = self->last + self->display; break;
+			case '-': self->display = self->last - self->display; break;
+			case 'x': self->display = self->last * self->display; break;
+			case '/': self->display = self->last / self->display; break;
+			}
+			self->decimalFlag = 0;
+			break;
+	default:
+			if(self->decimalFlag > 0){
+				if(self->decimalFlag<1000000){
+					self->display = self->display + ((double)atoi(value)) / (self->decimalFlag);
+					errLogf(" C %f ", self->display);
+					self->decimalFlag *= 10;
+				}
+			}else{
+				self->display = self->display * 10 + atoi(value);
+			}
+	}
+
+	return 0;
+}
+
+void static formatDisplay(char *buffer, double value)
+{
+int	 len;
+
+	snprintf(buffer, 64, "%8.8lf", value);
+	len = strlen(buffer) - 1;
+
+	while(len>0){
+		if(buffer[len]=='.') {
+			buffer[len] = 0;
+			break;
+		}
+		if(buffer[len]!='0') break;
+		buffer[len--] = 0;
+	}
+}
+
+He static calcPainelRender(Calc self)
+{
+char	 buffer0[64];
+char	 buffer1[64];
+
+	formatDisplay(buffer0, self->display);
+
+	formatDisplay(buffer1, self->last);
+	strcat(buffer1, ' ');
+
+	switch(self->lastOper){
+	case '+':
+	case '-':
+	case 'x':
+	case '/':
+		strcat(buffer1, self->lastOper);
+		break;
+	default:
+		strcat(buffer1, ' ');
+	}
+
+	return {%
+	<div class="painel">
+		<div class="painel_last"> 
+			<div class="painel_last_label"> Last: </div>
+			<div class="painel_last_value"> {buffer1} </div>
+		</div>
+		<div class="painel_curr"> {buffer0} </div>
+	</div>
+	%}
+}
+
+He static calcKeyboardRender(Calc self)
+{
+	return {%
+	<div class="keyboard">
+		<div class="keyboard_row">
+			<div class="keyboard_button" onClick=calcClickHandler(self, "C")> C </div>
+			<div class="keyboard_button" onClick=calcClickHandler(self, "X")> CE </div>
+			<div class="keyboard_button" onClick=calcClickHandler(self, "")> &nbsp; </div>
+			<div class="keyboard_button" onClick=calcClickHandler(self, "/")> / </div>
+		</div>
+		<div class="keyboard_row">
+			<div class="keyboard_button" onClick=calcClickHandler(self, "7")> 7 </div>
+			<div class="keyboard_button" onClick=calcClickHandler(self, "8")> 8 </div>
+			<div class="keyboard_button" onClick=calcClickHandler(self, "9")> 9 </div>
+			<div class="keyboard_button" onClick=calcClickHandler(self, "x")> x </div>
+		</div>
+		<div class="keyboard_row">
+			<div class="keyboard_button" onClick=calcClickHandler(self, "4")> 4 </div>
+			<div class="keyboard_button" onClick=calcClickHandler(self, "5")> 5 </div>
+			<div class="keyboard_button" onClick=calcClickHandler(self, "6")> 6 </div>
+			<div class="keyboard_button" onClick=calcClickHandler(self, "-")> - </div>
+		</div>
+		<div class="keyboard_row">
+			<div class="keyboard_button" onClick=calcClickHandler(self, "1")> 1 </div>
+			<div class="keyboard_button" onClick=calcClickHandler(self, "2")> 2 </div>
+			<div class="keyboard_button" onClick=calcClickHandler(self, "3")> 3 </div>
+			<div class="keyboard_button" onClick=calcClickHandler(self, "+")> + </div>
+		</div>
+		<div class="keyboard_row">
+			<div class="keyboard_button" onClick=calcClickHandler(self, "S")> +/- </div>
+			<div class="keyboard_button" onClick=calcClickHandler(self, "0")> 0 </div>
+			<div class="keyboard_button" onClick=calcClickHandler(self, ".")> . </div>
+			<div class="keyboard_button" onClick=calcClickHandler(self, "=")> = </div>
+		</div>
+	</div>
+	%}
+}
+
+He calcRender(HComponent component)
+{
+Calc self = (Calc)component;
+
+	return {%
+	<div class="calc" id="calc">
+		<calcPainelRender(self) />
+		<calcKeyboardRender(self) />
+	</div>
+	%}
+}
+

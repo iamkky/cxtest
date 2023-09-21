@@ -1,0 +1,165 @@
+body	{
+	background-color: #d0f0f0;
+	font-family: "Lucida Console";
+	font-size: 12px;
+}
+
+.htab_header{
+	size: 0;
+	margin: 0;
+	padding: 0;
+	list-style-type: none;
+}
+
+.htab_tab {
+	margin: 0;
+	margin-right: 2px;
+	padding: 0;
+	display: inline;
+}
+
+.htab_text {
+	padding: 0 10px;
+	display: inline-block;
+	font-weight: 600;
+	font-size: 15px;
+	line-height: 32px;
+	text-decoration: none;
+	color: #333;
+	background: #f1f1f1;
+	outline: none;
+	border: 2px solid #ccc;
+	border-bottom: none;
+	border-radius: 5px 5px 0 0;
+	position: relative;
+	transition: border-color .3s linear;
+}
+
+.htab_text_selected {
+	padding: 0 10px;
+	display: inline-block;
+	font-weight: 600;
+	font-size: 15px;
+	line-height: 32px;
+	text-decoration: none;
+	color: #333;
+	background: #f1f1f1;
+	outline: none;
+	border: 2px solid #ccc;
+	border-bottom: none;
+	border-radius: 5px 5px 0 0;
+	position: relative;
+	transition: border-color .3s linear;
+
+	font-weight: bold;
+	border-color: #4a6a7c;
+	background: #fff;
+	z-index: 3;
+}
+
+.htab_panel {
+	border: none;
+	border-top: 2px solid #4a6a7c;
+	border-radius: 0;
+	background-color: #fff;
+	position: relative;
+	padding: 0;
+	margin: 0;
+	outline: none;
+	margin-top: -2px;	
+}
+
+
+.app	{
+	display: flex;
+}
+
+.calc	{
+	font-weight: bold;
+	font-size: 16px;
+	flex-shrink: 0;
+	width: 300px;
+	border: solid 1px;
+	margin: 2px;
+	align-self: flex-start;
+	background: #E0E0E0;
+}
+	
+.painel	{
+	font-family: "Lucida Console";
+	font-size: 24px;
+	margin: 6px;
+	border: 1px solid #7090ff;
+	text-align: right;
+	display: flex;
+	flex-direction: column;
+	background: #E7F6FF;
+}
+
+.painel_last	{
+	font-family: "Lucida Console";
+	font-size: 16px;
+	display: flex;
+	margin: 2px;
+	background: #E0E8E3;
+}
+
+.painel_curr	{
+	font-family: "Lucida Console";
+	font-size: 24px;
+	margin: 2px;
+}
+
+.painel_last_value {
+	flex: 1;
+}
+
+.keyboard{
+	margin: 6px;
+	border: 1px solid #7090ff;
+}
+
+.keyboard_row{
+	display: flex;
+	background: #f0f0f0;
+}
+
+.keyboard_button{
+	margin: 8px;
+	padding-top: 6px;
+	padding-bottom: 6px;
+	border: 2px solid #9090ff;
+	width:25%;
+	text-align: center;
+	background-image: linear-gradient(#f9f9f9,#d0d0e0);
+}
+
+.json{
+	border: solid 1px;
+	margin: 2px;
+	background: #B0B0B0;
+}
+
+.table_header{
+	background-image: linear-gradient(#f9f9f9,#e4e4e4);
+}
+
+.table_pair{
+	background-color: #f3f6fa;
+}
+
+.table_even{
+	background-color: #fff;
+}
+
+.table_sort_up{
+	border: 4px solid #15151500;
+	border-bottom: 5px solid #8883BB;
+	float: right;
+}
+
+.table_sort_down{
+	border: 4px solid #15151500;
+	border-top: 5px solid #8883BB;
+	float: right;
+}

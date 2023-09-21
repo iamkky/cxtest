@@ -1,0 +1,98 @@
+#include <string.h>
+#include <abd/printf.h>
+#include <abd/string.h>
+
+//HEADERX(HTab, _HTE_HTAB_H_)
+#include <awtk/HComponent.h>
+
+Class(HTab) {
+	HComponent_st   hcomponent;
+	int		selected;
+};
+
+Constructor(HTab);
+Destructor(HTab);
+
+HtElement htabRender(HComponent component);
+int	  htabClickHandler(void *component, char *value);
+
+//ENDX
+
+
+Constructor(HTab)
+{
+	CInit(HTab);
+	HComponentConstructor((HComponent)self);
+
+	self->hcomponent.render = htabRender;
+
+        self->selected = 0;
+
+	return self;
+}
+
+Destructor(HTab)
+{
+	free(self);
+}
+
+int htabClickHandler(void *component, char *value)
+{
+HTab self = (HTab)component;
+
+	self->selected = atoi(value);
+	errLogf("Selected: %d\n", atoi(value));
+
+	return 0;
+}
+
+
+HtElement htabRender(HComponent component)
+{
+HTab self = (HTab)component;
+HtElement	panel, header;
+HComponent	child;
+char		*t0, *t1;
+char		*tab_class;
+int		sel;
+int		c;
+
+	header = htUl("htab_header", NULL);
+	sel = self->selected;
+
+	c = 0;
+	panel = NULL;
+	child = component->child;
+	while(child){
+		if(sel == c) {
+			tab_class = "htab_text_selected";
+			panel = child->render(child);
+		}else{
+			tab_class = "htab_text";
+		}
+		header->add(header, 
+			htLi("htab_tab",
+				htA(tab_class,
+				    htText(t1=strfmt("Tab %d", c)),
+				    htEventNew("onClick", self, htabClickHandler, t0=strfmt("%d", c))
+				)
+			)
+		);
+		if(t0) free(t0);
+		if(t1) free(t1);
+
+		child = child->next;
+		c++;
+	}
+
+
+	return htDiv("htab",
+		htAttributeNew("id","htab"),
+		htDiv("htab_header_div", header
+		),
+		htDiv("htab_panel",
+			panel
+		)
+	);
+}
+
