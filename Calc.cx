@@ -1,7 +1,7 @@
 #include <string.h>
 #include "abd/printf.h"
 
-//HEADERX(Calc,_HTE_CALC_COMPONENT_H_)
+//HEADERX(Calc.h,_HTE_CALC_COMPONENT_H_)
 #include <awtk/HComponent.h>
 
 Class(Calc) {
@@ -15,8 +15,8 @@ Class(Calc) {
 Constructor(Calc);
 Destructor(Calc);
 
-He calcRender(HComponent self);
-int	  calcClickHandler(void *component, char *value);
+He	calcRender(HComponent self);
+int	calcClickHandler(void *component, char *value);
 
 //ENDX
 
@@ -108,25 +108,28 @@ int	 len;
 	}
 }
 
-He static calcPainelRender(Calc self)
+He static calcPainelRender(Calc self, ...)
 {
 char	 buffer0[64];
 char	 buffer1[64];
+int	len;
 
 	formatDisplay(buffer0, self->display);
 
 	formatDisplay(buffer1, self->last);
-	strcat(buffer1, ' ');
+	strcat(buffer1, " ");
 
 	switch(self->lastOper){
 	case '+':
 	case '-':
 	case 'x':
 	case '/':
-		strcat(buffer1, self->lastOper);
+		len = strlen(buffer1);
+		buffer1[len] = self->lastOper;
+		buffer1[len+1] = 0;
 		break;
 	default:
-		strcat(buffer1, ' ');
+		strcat(buffer1, " ");
 	}
 
 	return {%
@@ -137,10 +140,10 @@ char	 buffer1[64];
 		</div>
 		<div class="painel_curr"> {buffer0} </div>
 	</div>
-	%}
+	%};
 }
 
-He static calcKeyboardRender(Calc self)
+He static calcKeyboardRender(Calc self, ...)
 {
 	return {%
 	<div class="keyboard">
@@ -175,7 +178,7 @@ He static calcKeyboardRender(Calc self)
 			<div class="keyboard_button" onClick=calcClickHandler(self, "=")> = </div>
 		</div>
 	</div>
-	%}
+	%};
 }
 
 He calcRender(HComponent component)
@@ -187,6 +190,6 @@ Calc self = (Calc)component;
 		<calcPainelRender(self) />
 		<calcKeyboardRender(self) />
 	</div>
-	%}
+	%};
 }
 

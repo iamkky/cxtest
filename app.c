@@ -2,21 +2,18 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include <mpaland/printf.h>
-#include <io/errLogf.h>
-#include <tmstr/string.h>
+#include <abd/printf.h>
+#include <abd/errLog.h>
+#include <abd/string.h>
 
 #include <abd/new.h>
 
-#include <tmstr/StringBuffer.h>
-#include <ht/HtElement.h>
+#include <abd/StringBuffer.h>
+#include <helium/He.h>
 
-#include <wasm/api.h>
-#include "hc/HComponent.x.h"
-#include "Calc.x.h"
-#include "JsonTable.x.h"
-#include "HTab.x.h"
-#include "App.x.h"
+#include <awtk/api.h>
+#include <awtk/HComponent.h>
+#include "Calc.h"
 
 ///// App State
 ///// Fixme: need to work in a good componentization and mothodology for render and states
@@ -32,12 +29,12 @@ void AppInit()
 	// But need to be called in order to force linking with wasm/api.o
 	wasmApiInit(); 
 
-	app = (HComponent)CNew(App);
+	app = (HComponent)CNew(Calc);
 
         render(NULL);
 }
 
-HtElement AppRender()
+He AppRender()
 {
 	return app->render(app);
 }

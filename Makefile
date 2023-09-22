@@ -3,7 +3,9 @@ LIB=
 DIRS=
 LIBOBJS=
 
-EXECOBJS=Calc.o JsonTable.o HTab.o App.o
+HEADEREXTRACTLIST=Calc.cx
+
+EXECOBJS=Calc.o app.o
 EXEC=app
 
 include make.wasm

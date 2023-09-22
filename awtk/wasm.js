@@ -47,6 +47,7 @@ function fbackRenderWasm(str)
 {
 	console.log("================================== RENDER ==================================");
 	var newpagejson = wasmGetString(instanceObj, memory, str);
+	console.log(newpagejson);
 
         var oldNode = document.getElementById("app");
 
