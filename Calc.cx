@@ -110,35 +110,28 @@ int	 len;
 
 He static calcPainelRender(Calc self, ...)
 {
-char	 buffer0[64];
-char	 buffer1[64];
-int	len;
+char	value[64];
+char	last[64];
 
-	formatDisplay(buffer0, self->display);
+	formatDisplay(value, self->display);
 
-	formatDisplay(buffer1, self->last);
-	strcat(buffer1, " ");
+	formatDisplay(last, self->last);
 
 	switch(self->lastOper){
-	case '+':
-	case '-':
-	case 'x':
-	case '/':
-		len = strlen(buffer1);
-		buffer1[len] = self->lastOper;
-		buffer1[len+1] = 0;
-		break;
-	default:
-		strcat(buffer1, " ");
+	case '+': strcat(last, " +"); break;
+	case '-': strcat(last, " -"); break;
+	case 'x': strcat(last, " x"); break;
+	case '/': strcat(last, " /"); break;
+	default:  strcat(last, " ");
 	}
 
 	return {%
 	<div class="painel">
 		<div class="painel_last"> 
 			<div class="painel_last_label"> Last: </div>
-			<div class="painel_last_value"> {buffer1} </div>
+			<div class="painel_last_value"> {last} </div>
 		</div>
-		<div class="painel_curr"> {buffer0} </div>
+		<div class="painel_curr"> {value} </div>
 	</div>
 	%};
 }
@@ -150,7 +143,7 @@ He static calcKeyboardRender(Calc self, ...)
 		<div class="keyboard_row">
 			<div class="keyboard_button" onClick=calcClickHandler(self, "C")> C </div>
 			<div class="keyboard_button" onClick=calcClickHandler(self, "X")> CE </div>
-			<div class="keyboard_button" onClick=calcClickHandler(self, "")> &nbsp; </div>
+			<div class="keyboard_button" onClick=calcClickHandler(self, "")>  </div>
 			<div class="keyboard_button" onClick=calcClickHandler(self, "/")> / </div>
 		</div>
 		<div class="keyboard_row">
@@ -186,7 +179,7 @@ He calcRender(HComponent component)
 Calc self = (Calc)component;
 
 	return {%
-	<div class="calc" id="calc">
+	<div class="calc" id="app">
 		<calcPainelRender(self) />
 		<calcKeyboardRender(self) />
 	</div>

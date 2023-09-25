@@ -31,6 +31,8 @@ void AppInit()
 
 	app = (HComponent)CNew(Calc);
 
+	errLogf("teste");
+
         render(NULL);
 }
 

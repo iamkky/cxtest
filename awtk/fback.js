@@ -43,23 +43,22 @@ var kkk = 0;
 function fbackRenderReplace(level, node, el, handler)
 {
 var elht;
-var face = faces[el.t];
+//var face = faces[el.t];
+var face = el.t;
 
 	fbackNodeCount++;
 	if(node === null || node.fback === undefined || node.fback.Hash != el.h
-	   || (el.t!=0 && node.nodeType == Node.TEXT_NODE)){
-		var hh = node === null ? "null" : (node.fback === undefined ? "undef" : node.fback.Hash);
-		if(typeof(face) != "undefined"){
+	   || (el.t!="_text" && node.nodeType == Node.TEXT_NODE)){
+		//var hh = node === null ? "null" : (node.fback === undefined ? "undef" : node.fback.Hash);
+		if(el.t=="_text"){
+ 	 		var elht = document.createTextNode(el.v);
+		}else{
  	 		var elht = document.createElement(face);
 			if(typeof(el.c) != "undefined"){
 				if(el.c != "") { elht.className = el.c };
 			}
-		}else{
-			if(el.t==0){
- 	 			var elht = document.createTextNode(el.v);
-			}else{
-				console.log("Undefined");
-				return undefined;
+			if(typeof(el.i) != "undefined"){
+				if(el.i != "") { elht.id = el.i };
 			}
 		}
 

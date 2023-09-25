@@ -5,6 +5,7 @@ function wasmGetString(instanceObj, memory, ws)
 {
 	len = instanceObj.instance.exports.stringBufferLength_(ws);
 	p   = instanceObj.instance.exports.stringBufferGetBuffer_(ws);
+	//console.log('Len: ' + len);
 	//console.log('Pointer: ' + p);
 	uint8 = new Uint8Array(memory.buffer, p, len);
 	return (new TextDecoder()).decode(uint8);
@@ -54,6 +55,7 @@ function fbackRenderWasm(str)
 	fbackStatReset();
 
         var eltree = JSON.parse(newpagejson);
+	console.log(eltree);
 	var newNode = fbackRenderReplace(0,oldNode, eltree, globalHandler)
 
 	fbackStatLog();
