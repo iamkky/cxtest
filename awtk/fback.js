@@ -42,8 +42,7 @@ var kkk = 0;
 
 function fbackRenderReplace(level, node, el, handler)
 {
-var elht;
-//var face = faces[el.t];
+var elnew;
 var face = el.t;
 
 	fbackNodeCount++;
@@ -51,22 +50,22 @@ var face = el.t;
 	   || (el.t!="_text" && node.nodeType == Node.TEXT_NODE)){
 		//var hh = node === null ? "null" : (node.fback === undefined ? "undef" : node.fback.Hash);
 		if(el.t=="_text"){
- 	 		var elht = document.createTextNode(el.v);
+ 	 		var elnew = document.createTextNode(el.v);
 		}else{
- 	 		var elht = document.createElement(face);
+ 	 		var elnew = document.createElement(face);
 			if(typeof(el.c) != "undefined"){
-				if(el.c != "") { elht.className = el.c };
+				if(el.c != "") { elnew.className = el.c };
 			}
 			if(typeof(el.i) != "undefined"){
-				if(el.i != "") { elht.id = el.i };
+				if(el.i != "") { elnew.id = el.i };
 			}
 		}
 
-		elht.fback = new Object();
-		elht.fback.Hash = el.h;
+		elnew.fback = new Object();
+		elnew.fback.Hash = el.h;
 
 		if(el.k != " undefined"){
-			if(el.k != "") { elht.fbackKey = el.k };
+			if(el.k != "") { elnew.fbackKey = el.k };
 		}
 
 		if (typeof(el.at) != "undefined") {
@@ -74,12 +73,12 @@ var face = el.t;
 			while(index < el.at.length) { 
 				attr = el.at[index];
 				if(attr.n == "onClick"){
-					elht.fback.EV = attr.v;
-					elht.fback.EP = attr.p;
-					elht.fback.EC = attr.c;
-					elht.addEventListener('click', handler);
+					elnew.fback.EV = attr.v;
+					elnew.fback.EP = attr.p;
+					elnew.fback.EC = attr.c;
+					elnew.addEventListener('click', handler);
 				}else{
-					elht.setAttribute(attr.n, attr.v);
+					elnew.setAttribute(attr.n, attr.v);
 				}
 				index++;
 			}  
@@ -87,18 +86,18 @@ var face = el.t;
 
 		if(node !== null && node.nodeType != Node.TEXT_NODE && el.t != 0){
 			while (node.hasChildNodes()) {
-				elht.appendChild(node.firstChild);
+				elnew.appendChild(node.firstChild);
 			}
 		}
 	}else{
-		elht = node;
+		elnew = node;
 	}
 
 	var childs;
 	var nchilds;
 
-	if(elht!== null){
-		childs = elht.childNodes;
+	if(elnew!== null){
+		childs = elnew.childNodes;
 		nchilds = childs.length;
 	}else{
 		nchilds = 0;
@@ -113,29 +112,29 @@ var face = el.t;
 				var htch = fbackRenderReplace(level+1, childs[cc], el.ch[index], handler);
 				if(childs[cc] !== htch){
 					fbackReplaceCount++;
-					elht.replaceChild(htch, childs[cc]);
+					elnew.replaceChild(htch, childs[cc]);
 				}
 				cc++;
 			}else{
 				var htch = fbackRenderReplace(level+1, null, el.ch[index], handler);
 				if(typeof(htch) != "undefined"){
 					fbackAppendCount++;
-					elht.appendChild(htch);
+					elnew.appendChild(htch);
 				}
 			}
 			index++;
 		}  
 
-		childs = elht.childNodes;
+		childs = elnew.childNodes;
 		nchilds = childs.length;
 
 		var last = el.ch.length;
 		for(cc = el.ch.length; cc<nchilds; cc++){
 			fbackRemoveCount++;
-			elht.removeChild(childs[last]);
+			elnew.removeChild(childs[last]);
 		}
 	}
 
-	return elht;
+	return elnew;
 }
 
