@@ -115,3 +115,60 @@ async function startWasm(url)
 	console.log("End");
 }
 
+async function WasmModule(url)
+{
+	const response = await fetch(url);
+	const buffer = await response.arrayBuffer();
+	const module = await WebAssembly.compile(buffer);
+	console.log(WebAssembly.Module.imports(module));
+
+	this.memory = new WebAssembly.Memory({ initial: 16 });
+
+	this.instanceObj = await WebAssembly.instantiate(buffer, {env: 
+							{
+							memory:memory,
+							consoleLog:console.log,
+							fbackRenderWasm:fbackRenderWasm,
+							consoleLogMsg:consoleLogMsg,
+							wasmFetch__:wasmFetch
+							}
+						});
+
+	this.exports = this.instanceObj.instance.exports;
+
+	console.log(this.exports);
+
+	console.log("Staring");
+	this.exports.AppInit();
+	console.log("End");
+
+
+	this.wasmGetString = function(instanceObj, memory, ws) {
+		len = this.exports.stringBufferLength_(ws);
+		p   = this.exports.stringBufferGetBuffer_(ws);
+		uint8 = new Uint8Array(memory.buffer, p, len);
+		return (new TextDecoder()).decode(uint8);
+	}
+
+	this.wasmStringNew = function(str) {
+		const encoder = new TextEncoder();
+		const view = encoder.encode(str);
+
+		len = view.length;
+		ws = this.exports.StringBufferNew_(len+1);
+	
+		if(ws>0){
+			p = this.exports.stringBufferGetBuffer_(ws);
+			var uint8 = new Uint8Array(this. memory.buffer, p, len+1);
+			uint8.set(view);
+			uint8[len] = 0;
+	 		this.exports.stringBufferHardsetLength_(ws, len+1);
+		}
+		return ws;
+	}
+
+	this.wasmStringFree = function(str) {
+		this.exports.stringBufferFree_(ws);
+	}
+}
+
