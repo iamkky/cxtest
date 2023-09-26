@@ -16,7 +16,7 @@ Constructor(Calc);
 Destructor(Calc);
 
 He	calcRender(HComponent self);
-int	calcClickHandler(void *component, char *value);
+int	calcClickHandler(void *component, StringBuffer value);
 
 //ENDX
 
@@ -41,17 +41,25 @@ Destructor(Calc)
 	free(self);
 }
 
-int calcClickHandler(void *component, char *value)
+int calcClickHandler(void *component, StringBuffer value)
 {
 Calc self = (Calc)component;
+char	ch;
 
-	switch(*value){
+
+	errLogf("Teste char >%s<\n", value->buffer);
+	if(value==NULL) return 0;
+	if(value->buffer==NULL) return 0;
+
+	ch = *(value->buffer);
+
+	switch(ch){
 	case '+':
 	case '-':
 	case 'x':
 	case '/':
 			self->last = self->display;
-			self->lastOper = *value;
+			self->lastOper = ch;
 			self->display = 0.0;
 			self->decimalFlag = 0;
 			break;
@@ -79,12 +87,12 @@ Calc self = (Calc)component;
 	default:
 			if(self->decimalFlag > 0){
 				if(self->decimalFlag<1000000){
-					self->display = self->display + ((double)atoi(value)) / (self->decimalFlag);
+					self->display = self->display + ((double)atoi(value->buffer)) / (self->decimalFlag);
 					errLogf(" C %f ", self->display);
 					self->decimalFlag *= 10;
 				}
 			}else{
-				self->display = self->display * 10 + atoi(value);
+				self->display = self->display * 10 + atoi(value->buffer);
 			}
 	}
 

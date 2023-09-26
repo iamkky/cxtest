@@ -40,8 +40,9 @@ function wasmStringFree(instanceObj, str)
 function globalHandler(event)
 {
 	const f = event.target.fback;
+	var value = wasmStringNew(instanceObj, memory, f.EV);
 	console.log("V: "+f.EV+" P:"+f.EP+" C:"+f.EC);
-	instanceObj.instance.exports.globalHandler(f.EP, f.EC, f.EV);
+	instanceObj.instance.exports.globalHandler(f.EP, f.EC, value);
 }
 
 function fbackRenderWasm(str)
