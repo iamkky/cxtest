@@ -1,25 +1,21 @@
 var instanceObj;
 var memory;
 
+// ========================================== STRING =========================================
 function wasmGetString(instanceObj, memory, ws)
 {
 	len = instanceObj.instance.exports.stringBufferLength_(ws);
 	p   = instanceObj.instance.exports.stringBufferGetBuffer_(ws);
-	//console.log('Len: ' + len);
-	//console.log('Pointer: ' + p);
 	uint8 = new Uint8Array(memory.buffer, p, len);
 	return (new TextDecoder()).decode(uint8);
 }
 
 function wasmStringNew(instanceObj, memory, str)
 {
-	console.log("STR: "+str);
 	const encoder = new TextEncoder();
 	const view = encoder.encode(str);
 
-	console.log(view);
 	len = view.length;
-	console.log("LEN: "+len);
 	ws = instanceObj.instance.exports.StringBufferNew_(len+1);
 	
 	if(ws>0){
@@ -37,20 +33,44 @@ function wasmStringFree(instanceObj, str)
 	instanceObj.instance.exports.stringBufferFree_(ws);
 }
 
+// ========================================= CONSOLE =========================================
+
+function consoleLogMsg(str)
+{
+	var msg = wasmGetString(instanceObj, memory, str);
+	console.log(msg);
+}
+
+// ========================================== EVENT ==========================================
+
 function globalHandler(event)
 {
 	const f = event.target.fback;
 	var value = wasmStringNew(instanceObj, memory, f.EV);
-	console.log("V: "+f.EV+" P:"+f.EP+" C:"+f.EC);
+	//console.log("V: "+f.EV+" P:"+f.EP+" C:"+f.EC);
 	instanceObj.instance.exports.globalHandler(f.EP, f.EC, value);
+	instanceObj.instance.exports.StringBufferFree_(value);
+}
+
+function wasmFetchHandler(response, component, handler)
+{
+	var response_ws = wasmStringNew(instanceObj, memory, response);
+	instanceObj.instance.exports.globalFetchHandler2(response_ws, component, handler);	
+	instanceObj.instance.exports.StringBufferFree_(response_ws);
+}
+
+function wasmFetch(url_ws, component, handler)
+{
+	var url = wasmGetString(instanceObj, memory, url_ws);
+	fetch(url).then(response => response.text()).then(response => wasmFetchHandler(response, component, handler));
 }
 
 function fbackRenderWasm(str)
 {
-	console.log("================================== RENDER ==================================");
+	console.log(">>>> RENDER >>>>");
 	var newpagejson = wasmGetString(instanceObj, memory, str);
-	console.log(newpagejson);
 
+	//console.log(newpagejson);
         var oldNode = document.getElementById("app");
 
 	fbackStatReset();
@@ -68,23 +88,7 @@ function fbackRenderWasm(str)
 	}
 }
 
-function wasmFetchHandler(response, component, handler)
-{
-	var response_ws = wasmStringNew(instanceObj, memory, response);
-	instanceObj.instance.exports.globalFetchHandler2(response_ws, component, handler);	
-}
-
-function wasmFetch(url_ws, component, handler)
-{
-	var url = wasmGetString(instanceObj, memory, url_ws);
-	fetch(url).then(response => response.text()).then(response => wasmFetchHandler(response, component, handler));
-}
-
-function consoleLogMsg(str)
-{
-	var msg = wasmGetString(instanceObj, memory, str);
-	console.log(msg);
-}
+// ========================================== START  ==========================================
 
 async function startWasm(url)
 {
