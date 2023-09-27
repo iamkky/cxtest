@@ -24,15 +24,10 @@ HComponent app;
 wasmExport
 void AppInit()
 {
-
 	// Does nothing!
 	// But need to be called in order to force linking with wasm/api.o
 	wasmApiInit(); 
-
 	app = (HComponent)CNew(Calc);
-
-	errLogf("teste");
-
         render(NULL);
 }
 
