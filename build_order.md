@@ -8,8 +8,8 @@ graph TD;
 	nrlex-->cxc;
 	libabd-->cxc
 	libabd-->libhelium;
-	cxc-->cx toolset;
-	libhelium-->cx toolset;
-	libabd-->cx toolset;
+	cxc-->CxToolset;
+	libhelium-->CxToolset;
+	libabd-->CxToolset;
 ```
 	
