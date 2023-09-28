@@ -15,6 +15,34 @@
 #include <awtk/HComponent.h>
 #include "Calc.h"
 
+He AppRender();
+
+int render(int type, void *component, StringBuffer value)
+{
+StringBuffer	str;
+He	e;
+
+	str = StringBufferNew(2000);
+
+        //memMonitor((char *)0x34dd0, 16);
+	errLogf("AppRender");
+	e = AppRender();
+
+        //memMonitor((char *)0x34dd0, 16);
+	errLogf("RenderJson");
+	heRenderJson(e, str);
+
+        //memMonitor((char *)0x34dd0, 16);
+	errLogf("htElementFree");
+	heFree(e);
+
+	fbackRenderWasm(str);
+
+	stringBufferFree(str);
+
+	return 0;
+}
+
 ///// App State
 ///// Fixme: need to work in a good componentization and mothodology for render and states
 /////        Too raw code by now... But ok for a prove of concept
@@ -27,8 +55,9 @@ void AppInit()
 	// Does nothing!
 	// But need to be called in order to force linking with wasm/api.o
 	wasmApiInit(); 
+	awtkRegisterGlobalHandlerHook(render);
 	app = (HComponent)CNew(Calc);
-        render(NULL);
+        render(0, app, NULL);
 }
 
 He AppRender()
