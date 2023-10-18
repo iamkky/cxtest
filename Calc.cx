@@ -5,7 +5,7 @@
 #include <awtk/HComponent.h>
 
 Class(Calc) {
-	HComponent_st	hcomponent;
+	HComponent_st	super;
 	double		display;
 	double		last;
 	char		lastOper;
@@ -25,7 +25,7 @@ Constructor(Calc)
 	CInit(Calc);
 	HComponentConstructor((HComponent)self);
 
-	self->hcomponent.render = calcRender;
+	self->super.render = calcRender;
 
 	self->display = 0.0;
 	self->last = 0.0;
@@ -187,7 +187,7 @@ He calcRender(HComponent component)
 Calc self = (Calc)component;
 
 	return {%
-	<div class="calc" id="app">
+	<div class="calc" id={self->super.id}>
 		<calcPainelRender(self) />
 		<calcKeyboardRender(self) />
 	</div>

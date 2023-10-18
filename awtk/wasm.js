@@ -135,16 +135,18 @@ function awtkModule() {
 	}
 }
 
-async function startWasm(url)
+async function awtkStartModule(url)
 {
-	console.log("Starting Wasm");
-	myAwtkModule = new awtkModule();
+	mod = new awtkModule();
 	
-	await myAwtkModule.load(url)
+	console.log("Loading Wasm Module");
+	await mod.load(url)
 
-	console.log("Staring");
-	myAwtkModule.exports.AppInit();
-	console.log("End");
+	console.log("Staring Wasm Module");
+	mod.exports.moduleStart()
+	console.log("Started");
+
+	return mod;
 }
 
 /*
