@@ -6,7 +6,18 @@
 <script TYPE="text/javascript" src="awtk/fback.js"></script>
 <script TYPE="text/javascript" src="awtk/wasm.js"></script>
 <script>
-awtkStartModule("app.wasm");
+awtkStartModule("app.wasm")
+  .then(
+	(mod) => {
+		console.log("AWTK START MODULE");
+		console.log(mod);
+		var id_sb = mod.wasmStringNew("app");
+		var format_sb = mod.wasmStringNew("Calc");
+		mod.exports.createComponent(id_sb, format_sb);
+		mod.wasmStringFree(id_sb);
+		mod.wasmStringFree(format_sb);
+	}
+  );
 </script>
 </head>
 <BODY>

@@ -111,13 +111,15 @@ function awtkModule() {
 	}
 
 
-	this.fbackRenderWasm = function(str)
+	this.fbackRenderWasm = function(id, str)
 	{
 		console.log(">>>> RENDER >>>>");
+		var newid = this.wasmGetString(id);
 		var newpagejson = this.wasmGetString(str);
+		console.log("NEWID: " + newid);
 
 		//console.log(newpagejson);
-	       	 var oldNode = document.getElementById("app");
+	       	 var oldNode = document.getElementById(newid);
 
 		fbackStatReset();
 
