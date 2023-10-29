@@ -11,10 +11,20 @@ awtkStartModule("app.wasm")
 	(mod) => {
 		console.log("AWTK START MODULE");
 		console.log(mod);
-		var id_sb = mod.wasmStringNew("app");
 		var format_sb = mod.wasmStringNew("Calc");
+
+		var id_sb = mod.wasmStringNew("app");
 		mod.exports.createComponent(id_sb, format_sb);
 		mod.wasmStringFree(id_sb);
+
+		var id_sb = mod.wasmStringNew("app2");
+		mod.exports.createComponent(id_sb, format_sb);
+		mod.wasmStringFree(id_sb);
+
+		var id_sb = mod.wasmStringNew("app3");
+		mod.exports.createComponent(id_sb, format_sb);
+		mod.wasmStringFree(id_sb);
+
 		mod.wasmStringFree(format_sb);
 	}
   );
@@ -22,6 +32,12 @@ awtkStartModule("app.wasm")
 </head>
 <BODY>
 	<div id="app"></div>
+	<br>
+	<div class="size" style="display:flex" >
+	<div id="app2"></div>
+	<div id="app3"></div>
+	</div>
+	<br>
 </BODY>
 </HTML>
 
