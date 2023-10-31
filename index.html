@@ -6,6 +6,25 @@
 <script TYPE="text/javascript" src="awtk/fback.js"></script>
 <script TYPE="text/javascript" src="awtk/wasm.js"></script>
 <script>
+function myFunction() {
+  document.getElementById("myDropdown").classList.toggle("show");
+}
+
+// Close the dropdown menu if the user clicks outside of it
+window.onclick = function(event) {
+  if (!event.target.matches('.dropbtn')) {
+    var dropdowns = document.getElementsByClassName("dropdown-content");
+    var i;
+    for (i = 0; i < dropdowns.length; i++) {
+      var openDropdown = dropdowns[i];
+      if (openDropdown.classList.contains('show')) {
+        openDropdown.classList.remove('show');
+      }
+    }
+  }
+} 
+</script>
+<script>
 awtkStartModule("app.wasm")
   .then(
 	(mod) => {
@@ -25,18 +44,31 @@ awtkStartModule("app.wasm")
 		mod.exports.createComponent(id_sb, format_sb);
 		mod.wasmStringFree(id_sb);
 
+		var id_sb = mod.wasmStringNew("app4");
+		mod.exports.createComponent(id_sb, format_sb);
+		mod.wasmStringFree(id_sb);
+
 		mod.wasmStringFree(format_sb);
 	}
   );
 </script>
 </head>
 <BODY>
-	<div id="app"></div>
+	<div class="size" style="display:flex" >
+		<div id="app"></div>
+		<div style="padding: 30px">
+			<div class="dropdown" onclick="event.stopPropagation()">
+				<button onclick="myFunction()" class="dropbtn">Calc in a Dropdown</button>
+				<div id="myDropdown" class="dropdown-content">
+					<div id="app2"></div>
+				</div>
+			</div>
+		</div>
+	</div>
 	<br>
 	<div class="size" style="display:flex" >
-	<div id="app2"></div>
-	<div id="app3"></div>
-	</div>
+		<div id="app3"></div>
+		<div id="app4"></div>
 	<br>
 </BODY>
 </HTML>
