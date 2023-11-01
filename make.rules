@@ -19,6 +19,6 @@ ${DIRS}:
 	${MAKE} -C $@ $(MAKECMDGOALS)
 
 clean::
-	rm -f ${LIB} ${OBJS} ${CLEANLIST} ${EXECOBJS}
+	rm -f ${LIB} ${OBJS} ${CLEANLIST} ${EXECOBJS} ${EXEC}
 	for a in ${DIRS}; do ${MAKE} -C $$a clean; done
 

@@ -6,7 +6,7 @@ LIBOBJS=
 HEADEREXTRACTLIST=Calc.cx
 
 EXECOBJS=Calc.o app.o
-EXEC=app
+EXEC=app.wasm
 
 include make.wasm
 include make.cx.inc
