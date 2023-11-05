@@ -5,8 +5,10 @@
 <link rel="stylesheet" href="style.css">
 <script TYPE="text/javascript" src="awtk/fback.js"></script>
 <script TYPE="text/javascript" src="awtk/wasm.js"></script>
+<script TYPE="text/javascript" src="calculator.js"></script>
 <script>
-function myFunction() {
+// Opens dropdown
+function showDropDown() {
   document.getElementById("myDropdown").classList.toggle("show");
 }
 
@@ -24,41 +26,13 @@ window.onclick = function(event) {
   }
 } 
 </script>
-<script>
-awtkStartModule("app.wasm")
-  .then(
-	(mod) => {
-		console.log("AWTK START MODULE");
-		console.log(mod);
-		var format_sb = mod.wasmStringNew("Calc");
-
-		var id_sb = mod.wasmStringNew("app");
-		mod.exports.createComponent(id_sb, format_sb);
-		mod.wasmStringFree(id_sb);
-
-		var id_sb = mod.wasmStringNew("app2");
-		mod.exports.createComponent(id_sb, format_sb);
-		mod.wasmStringFree(id_sb);
-
-		var id_sb = mod.wasmStringNew("app3");
-		mod.exports.createComponent(id_sb, format_sb);
-		mod.wasmStringFree(id_sb);
-
-		var id_sb = mod.wasmStringNew("app4");
-		mod.exports.createComponent(id_sb, format_sb);
-		mod.wasmStringFree(id_sb);
-
-		mod.wasmStringFree(format_sb);
-	}
-  );
-</script>
 </head>
 <BODY>
 	<div class="size" style="display:flex" >
 		<div id="app"></div>
 		<div style="padding: 30px">
 			<div class="dropdown" onclick="event.stopPropagation()">
-				<button onclick="myFunction()" class="dropbtn">Calc in a Dropdown</button>
+				<button onclick="showDropDown()" class="dropbtn">Calc in a Dropdown</button>
 				<div id="myDropdown" class="dropdown-content">
 					<div id="app2"></div>
 				</div>
@@ -71,5 +45,16 @@ awtkStartModule("app.wasm")
 		<div id="app4"></div>
 	<br>
 </BODY>
+<script>
+startCalcAwtkModule("calculator.wasm")
+  .then(
+	(mod) => {
+		mod.createCalc("app");
+		mod.createCalc("app2");
+		mod.createCalc("app3");
+		mod.createCalc("app4");
+	}
+  );
+</script>
 </HTML>
 

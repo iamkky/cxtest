@@ -91,7 +91,7 @@ function awtkModule() {
 		var value = this.wasmStringNew(f.EV);
 		//console.log("V: "+f.EV+" P:"+f.EP+" C:"+f.EC);
 		this.exports.globalHandler(f.EP, f.EC, value);
-		this.exports.StringBufferFree_(value);
+		this.exports.stringBufferFree_(value);
 	}
 
 
@@ -99,7 +99,7 @@ function awtkModule() {
 	{
 		var response_ws = this.wasmStringNew(response);
 		this.exports.globalFetchHandler2(response_ws, component, handler);	
-		this.exports.StringBufferFree_(response_ws);
+		this.exports.stringBufferFree_(response_ws);
 	}
 
 
