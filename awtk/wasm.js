@@ -52,30 +52,30 @@ function awtkModule() {
 	}
 
 	this.wasmGetString = function(ws) {
-		len = this.exports.stringBufferLength_(ws);
-		p   = this.exports.stringBufferGetBuffer_(ws);
-		uint8 = new Uint8Array(this.memory.buffer, p, len);
+		const len = this.exports.stringBufferLength_(ws);
+		const p   = this.exports.stringBufferGetBuffer_(ws);
+		const uint8 = new Uint8Array(this.memory.buffer, p, len);
+
 		return (new TextDecoder()).decode(uint8);
 	}
 
 	this.wasmStringNew = function(str) {
 		const encoder = new TextEncoder();
 		const view = encoder.encode(str);
-
-		len = view.length;
-		ws = this.exports.StringBufferNew_(len+1);
+		const len = view.length;
+		const ws = this.exports.StringBufferNew_(len+1);
 	
 		if(ws>0){
-			p = this.exports.stringBufferGetBuffer_(ws);
-			var uint8 = new Uint8Array(this.memory.buffer, p, len+1);
+			const p = this.exports.stringBufferGetBuffer_(ws);
+			const uint8 = new Uint8Array(this.memory.buffer, p, len+1);
 			uint8.set(view);
 			uint8[len] = 0;
-	 		this.exports.stringBufferHardsetLength_(ws, len+1);
+	 		this.exports.stringBufferHardsetLength_(ws, len);
 		}
 		return ws;
 	}
 
-	this.wasmStringFree = function(str) {
+	this.wasmStringFree = function(ws) {
 		this.exports.stringBufferFree_(ws);
 	}
 
@@ -88,7 +88,7 @@ function awtkModule() {
 	this.globalHandler = function(event)
 	{
 		const f = event.target.fback;
-		var value = this.wasmStringNew(f.EV);
+		const value = this.wasmStringNew(f.EV);
 		//console.log("V: "+f.EV+" P:"+f.EP+" C:"+f.EC);
 		this.exports.globalHandler(f.EP, f.EC, value);
 		this.exports.stringBufferFree_(value);
@@ -97,7 +97,7 @@ function awtkModule() {
 
 	this.wasmFetchHandler = function(response, component, handler)
 	{
-		var response_ws = this.wasmStringNew(response);
+		const response_ws = this.wasmStringNew(response);
 		this.exports.globalFetchHandler2(response_ws, component, handler);	
 		this.exports.stringBufferFree_(response_ws);
 	}
@@ -105,7 +105,7 @@ function awtkModule() {
 
 	this.wasmFetch = function(url_ws, component, handler)
 	{
-		var url = this.wasmGetString(url_ws);
+		const url = this.wasmGetString(url_ws);
 		// not tested, i think the bind is needed.. But not tested
 		fetch(url).then(response => response.text()).then(response => this.wasmFetchHandler(response, component, handler).bind(this));
 	}
