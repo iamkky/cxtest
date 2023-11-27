@@ -134,6 +134,49 @@ body	{
 	background-image: linear-gradient(#f9f9f9,#d0d0e0);
 }
 
+
+.cx-slider-root {
+	border-radius: 12px;
+	display: inline-block;
+	position: relative;
+	cursor: pointer;
+	color: #1976d2;
+	height: 6px;
+	width: 100%;
+	padding: 13px 0;
+}
+
+.cx-slider-track {
+	display: block;
+	position: absolute;
+	border-radius: inherit;
+	background-color: currentColor;
+	opacity: 0.4;
+	width: 100%;
+	height: inherit;
+}
+
+.cx-slider-left {
+	display: block;
+	position: absolute;
+	border-radius: inherit;
+	border: none;
+	background-color: currentColor;
+	height: inherit;
+}
+
+.cx-slider-thumb {
+	position: absolute;
+	width: 14px;
+	height: 14px;
+	border-radius: 50%;
+	outline: 0;
+	background-color: currentColor;
+	display: flex;
+	top: 50%;
+	transform: translate(-50%, -50%);
+}
+
 .json{
 	border: solid 1px;
 	margin: 2px;

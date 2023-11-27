@@ -16,7 +16,7 @@ Constructor(Calc);
 Destructor(Calc);
 
 He	calcRender(HComponent self);
-int	calcClickHandler(void *component, StringBuffer value);
+int	calcClickHandler(StringBuffer event_type, void *component, StringBuffer value);
 
 //ENDX
 
@@ -41,7 +41,7 @@ Destructor(Calc)
 	free(self);
 }
 
-int calcClickHandler(void *component, StringBuffer value)
+int calcClickHandler(StringBuffer event_type, void *component, StringBuffer value)
 {
 Calc self = (Calc)component;
 char	ch;
@@ -149,34 +149,34 @@ He static calcKeyboardRender(Calc self, ...)
 	return {%
 	<div class="keyboard">
 		<div class="keyboard_row">
-			<div class="keyboard_button" onClick=calcClickHandler(self, "C")> C </div>
-			<div class="keyboard_button" onClick=calcClickHandler(self, "X")> CE </div>
-			<div class="keyboard_button" onClick=calcClickHandler(self, "")>  </div>
-			<div class="keyboard_button" onClick=calcClickHandler(self, "/")> / </div>
+			<div class="keyboard_button" onClick=calcClickHandler(("C"))> C </div>
+			<div class="keyboard_button" onClick=calcClickHandler(("X"))> CE </div>
+			<div class="keyboard_button" onClick=calcClickHandler((""))>  </div>
+			<div class="keyboard_button" onClick=calcClickHandler(("/"))> / </div>
 		</div>
 		<div class="keyboard_row">
-			<div class="keyboard_button" onClick=calcClickHandler(self, "7")> 7 </div>
-			<div class="keyboard_button" onClick=calcClickHandler(self, "8")> 8 </div>
-			<div class="keyboard_button" onClick=calcClickHandler(self, "9")> 9 </div>
-			<div class="keyboard_button" onClick=calcClickHandler(self, "x")> x </div>
+			<div class="keyboard_button" onClick=calcClickHandler(("7"))> 7 </div>
+			<div class="keyboard_button" onClick=calcClickHandler(("8"))> 8 </div>
+			<div class="keyboard_button" onClick=calcClickHandler(("9"))> 9 </div>
+			<div class="keyboard_button" onClick=calcClickHandler(("x"))> x </div>
 		</div>
 		<div class="keyboard_row">
-			<div class="keyboard_button" onClick=calcClickHandler(self, "4")> 4 </div>
-			<div class="keyboard_button" onClick=calcClickHandler(self, "5")> 5 </div>
-			<div class="keyboard_button" onClick=calcClickHandler(self, "6")> 6 </div>
-			<div class="keyboard_button" onClick=calcClickHandler(self, "-")> - </div>
+			<div class="keyboard_button" onClick=calcClickHandler(("4"))> 4 </div>
+			<div class="keyboard_button" onClick=calcClickHandler(("5"))> 5 </div>
+			<div class="keyboard_button" onClick=calcClickHandler(("6"))> 6 </div>
+			<div class="keyboard_button" onClick=calcClickHandler(("-"))> - </div>
 		</div>
 		<div class="keyboard_row">
-			<div class="keyboard_button" onClick=calcClickHandler(self, "1")> 1 </div>
-			<div class="keyboard_button" onClick=calcClickHandler(self, "2")> 2 </div>
-			<div class="keyboard_button" onClick=calcClickHandler(self, "3")> 3 </div>
-			<div class="keyboard_button" onClick=calcClickHandler(self, "+")> + </div>
+			<div class="keyboard_button" onClick=calcClickHandler(("1"))> 1 </div>
+			<div class="keyboard_button" onClick=calcClickHandler(("2"))> 2 </div>
+			<div class="keyboard_button" onClick=calcClickHandler(("3"))> 3 </div>
+			<div class="keyboard_button" onClick=calcClickHandler(("+"))> + </div>
 		</div>
 		<div class="keyboard_row">
-			<div class="keyboard_button" onClick=calcClickHandler(self, "S")> +/- </div>
-			<div class="keyboard_button" onClick=calcClickHandler(self, "0")> 0 </div>
-			<div class="keyboard_button" onClick=calcClickHandler(self, ".")> . </div>
-			<div class="keyboard_button" onClick=calcClickHandler(self, "=")> = </div>
+			<div class="keyboard_button" onClick=calcClickHandler(("S"))> +/- </div>
+			<div class="keyboard_button" onClick=calcClickHandler(("0"))> 0 </div>
+			<div class="keyboard_button" onClick=calcClickHandler(("."))> . </div>
+			<div class="keyboard_button" onClick=calcClickHandler(("="))> = </div>
 		</div>
 	</div>
 	%};

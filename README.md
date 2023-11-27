@@ -1,6 +1,6 @@
 # A Calculator using CX and AWTK #
 
-[Calc Running as Example](https://iamkky.github.io/cxtest/test)
+[Calc Running as Example](https://iamkky.github.io/cxtest)
 
 ## Building Order ##
 

@@ -1,4 +1,4 @@
 .SUFFIXES: .cx
 
 .cx.c:
-	cxc $< 
+	cxc -w $< 

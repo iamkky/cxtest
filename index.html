@@ -42,7 +42,9 @@ window.onclick = function(event) {
 	<br>
 	<div class="size" style="display:flex" >
 		<div id="app3"></div>
-		<div id="app4"></div>
+		<div style="width:300px">
+			<div id="app4"></div>
+		</div>
 	<br>
 </BODY>
 <script>
@@ -52,7 +54,7 @@ startCalcAwtkModule("calculator.wasm")
 		mod.createCalc("app");
 		mod.createCalc("app2");
 		mod.createCalc("app3");
-		mod.createCalc("app4");
+		mod.createSlider("app4");
 	}
   );
 </script>

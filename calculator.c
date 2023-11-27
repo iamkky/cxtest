@@ -13,9 +13,12 @@
 
 #include <awtk/api.h>
 #include <awtk/HComponent.h>
-#include "Calc.h"
 
-int globalHandlerHook(int type, void *component, StringBuffer value)
+#include "Calc.h"
+#include "Slider.cx.h"
+
+//int globalHandlerHook(int type, StringBuffer void *component, StringBuffer value)
+int globalHandlerHook(int type, StringBuffer event_type, void *component, StringBuffer value)
 {
 StringBuffer	json_str, id_str;
 char		*id;
@@ -62,6 +65,8 @@ int	component_list_size;
 wasmExport
 void createComponent(StringBuffer id, StringBuffer format)
 {
+	//errLogf("TESTE >%s< !", stringBufferGetBuffer(format));
+
 	if(nullAssert(id)){
 		errLogf("createComponent: NULL id (stringbuffer)");
 		return;
@@ -77,10 +82,18 @@ void createComponent(StringBuffer id, StringBuffer format)
 		return;
 	}
 
-	component_list[component_list_size] = (HComponent)CNew(Calc);
+	if(!stringBufferCompare(format,"Calc")){
+		component_list[component_list_size] = (HComponent)CNew(Calc);
+	}else if(!stringBufferCompare(format,"Slider")){
+		component_list[component_list_size] = (HComponent)CNew(Slider);
+	}else{
+		errLogf("Unknow component %s", stringBufferGetBuffer(format));
+		return;
+	}
 	hcomponentSetId(component_list[component_list_size], stringBufferGetBuffer(id));
-        globalHandlerHook(0, component_list[component_list_size], NULL);
+        globalHandlerHook(0, NULL, component_list[component_list_size], NULL);
 	component_list_size++;
+	return;
 }
 
 wasmExport

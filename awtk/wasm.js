@@ -26,6 +26,7 @@ function awtkModule() {
 							fbackRenderWasm:this.fbackRenderWasm.bind(this),
 							consoleLogMsg:this.consoleLogMsg.bind(this),
 							wasmFetch__:this.wasmFetch.bind(this)
+							
 							}
 						});
 
@@ -85,15 +86,22 @@ function awtkModule() {
 		console.log(msg);
 	}
 
-	this.globalHandler = function(event)
+	this.globalHandler = function(event, v, p, c)
 	{
-		const f = event.target.fback;
-		const value = this.wasmStringNew(f.EV);
-		//console.log("V: "+f.EV+" P:"+f.EP+" C:"+f.EC);
-		this.exports.globalHandler(f.EP, f.EC, value);
-		this.exports.stringBufferFree_(value);
+		console.log("HANDLER: VALUE:>>" + v + "<< P:>>" + p + "<< C:>>" + c + "<<");
+		this.handlerGateway(event, p, c, v);
 	}
 
+	this.handlerGateway = function(event, pointer, component, value)
+	{
+		const f = event.target.fback;
+		const value_sb = this.wasmStringNew(value);
+		const event_type = this.wasmStringNew(event.type);
+		//console.log("V: "+f.EV+" P:"+f.EP+" C:"+f.EC);
+		this.exports.globalHandler_(event_type, pointer, component, value_sb);
+		this.exports.stringBufferFree_(event_type);
+		this.exports.stringBufferFree_(value_sb);
+	}
 
 	this.wasmFetchHandler = function(response, component, handler)
 	{
@@ -125,7 +133,7 @@ function awtkModule() {
 
        		var eltree = JSON.parse(newpagejson);
 		console.log(eltree);
-		var newNode = fbackRenderReplace(0,oldNode, eltree, this.globalHandler.bind(this))
+		var newNode = fbackRenderReplace(this, 0, oldNode, eltree, this.globalHandler.bind(this))
 
 		fbackStatLog();
 
