@@ -1,0 +1,60 @@
+#include <string.h>
+#include "abd/printf.h"
+
+//HEADERX(Slider.cx.h,_HTE_SLIDE_COMPONENT_H_)
+#include <awtk/HComponent.h>
+
+Class(Slider) {
+	HComponent_st	super;
+	double		position;
+};
+
+Constructor(Slider);
+Destructor(Slider);
+
+He	sliderRender(HComponent self);
+int	sliderClickHandler(StringBuffer event_type, void *component, StringBuffer value);
+
+//ENDX
+
+Constructor(Slider)
+{
+	CInit(Slider);
+	HComponentConstructor((HComponent)self);
+
+	self->super.render = sliderRender;
+
+	self->position = 46.0;
+
+	return self;
+}
+
+Destructor(Slider)
+{
+	free(self);
+}
+
+int sliderClickHandler(StringBuffer event_type, void *component, StringBuffer value)
+{
+Slider self = (Slider)component;
+
+	self->position++;
+	return 0;
+}
+
+
+He sliderRender(HComponent component)
+{
+Slider self = (Slider)component;
+
+	return {%
+	<span class="cx-slider-root" id={self->super.id}>
+		<span class="cx-slider-track"></span>
+		<span class="cx-slider-left" style={{"width: %5.2f%%", self->position}} ></span>
+		<span class="cx-slider-thumb" style={{"left: %5.2f%%", self->position}} onMouseDown=sliderClickHandler(("C"))></span>
+	</span>
+	%};
+/*
+*/
+}
+

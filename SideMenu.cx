@@ -1,0 +1,120 @@
+#include <string.h>
+#include "abd/printf.h"
+
+//HEADERX(SideMenu.cx.h,_HTE_SIDEMENU_COMPONENT_H_)
+#include <awtk/HComponent.h>
+
+Class(SideMenu) {
+	HComponent_st	super;
+	double		display;
+	double		last;
+	char		lastOper;
+	int		decimalFlag;
+};
+
+Constructor(SideMenu);
+Destructor(SideMenu);
+
+He	sideMenuRender(HComponent self);
+int	sideMenuClickHandler(StringBuffer event_type, void *component, StringBuffer value);
+
+//ENDX
+
+Constructor(SideMenu)
+{
+	CInit(SideMenu);
+	HComponentConstructor((HComponent)self);
+
+	self->super.render = sideMenuRender;
+
+	self->display = 0.0;
+	self->last = 0.0;
+	self->lastOper = ' ';
+	self->decimalFlag = 0;
+
+	return self;
+}
+
+Destructor(SideMenu)
+{
+	free(self);
+}
+
+int sideMenuClickHandler(StringBuffer event_type, void *component, StringBuffer value)
+{
+SideMenu self = (SideMenu)component;
+char	ch;
+
+	errLogf("Teste char >%s<\n", value->buffer);
+
+	if(value==NULL) return 0;
+	if(value->buffer==NULL) return 0;
+	ch = *(value->buffer);
+
+	switch(ch){
+	case '+':;
+	case '-':;
+	}
+
+	return 0;
+}
+
+static char *menu0[16] = { "Google", "Yahoo", "Apple", NULL };
+
+static char *menu1[16][16] = {
+	{ "Search", "Maps", "Earth", "Translate", NULL },
+	{ "Mail", "Groups", NULL },
+	{ "iCloud", "iTunes", "App Store", "Store", NULL },
+	{ NULL }
+};
+
+static int active[10] = {0, 0, 0, 0, 0, 0, 0};
+
+
+He static sideMenuItem(SideMenu self, char *href, ...)
+{
+va_list	args;
+He	children;
+
+	children = HE_GET_CHILDREN(href);
+
+	return {%
+	<li class="sideMenuItem">
+		<a href={href}> [children]  </a>
+	</li>
+	%};
+}
+
+He static sideMenuBar(SideMenu self, char *itens[], int active, ...)
+{
+He ulist;
+int c;
+
+	ulist = {% <ul class="sideMenuBar"> </ul> %};
+
+	for(c=0; itens[c]; c++){
+		heAddChild(ulist, {% <sideMenuItem(self,"teste")> {itens[c]} </sideMenuItem> %});
+	}
+	return ulist;
+}
+
+
+/*
+			<div class="keyboard_button" onClick=sideMenuClickHandler(("C"))> C </div>
+			<div class="keyboard_button" onClick=sideMenuClickHandler(("X"))> CE </div>
+			<div class="keyboard_button" onClick=sideMenuClickHandler((""))>  </div>
+			<div class="keyboard_button" onClick=sideMenuClickHandler(("/"))> / </div>
+*/
+
+He sideMenuRender(HComponent component)
+{
+SideMenu self = (SideMenu)component;
+
+	return {%
+	<div class="sideMenu" id={self->super.id}>
+		<sideMenuBar(self, menu0, 0) />
+		<sideMenuBar(self, menu1[0], 0) />
+	</div>
+	%};
+}
+
