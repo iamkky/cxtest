@@ -27,6 +27,18 @@ async function startCalcAwtkModule(url)
 		console.log("mod.createSlider in");
 	}
 
+	mod.createComponent = function(id, component_name){
+		console.log("mod.createComponent in");
+		const format_sb = mod.wasmStringNew(component_name);
+		const id_sb = mod.wasmStringNew(id);
+		console.log(format_sb);
+		console.log(id_sb);
+		mod.exports.createComponent(id_sb, format_sb);
+		mod.wasmStringFree(id_sb);
+		mod.wasmStringFree(format_sb);
+		console.log("mod.createComponent in");
+	}
+
 	return mod;
 }
 

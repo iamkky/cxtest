@@ -45,16 +45,23 @@ window.onclick = function(event) {
 		<div style="width:300px">
 			<div id="app4"></div>
 		</div>
+		<div id="app5"></div>
+	</div>
+	<div class="size" style="display:flex" >
+		<div id="app6"></div>
+	</div>
 	<br>
 </BODY>
 <script>
 startCalcAwtkModule("calculator.wasm")
   .then(
 	(mod) => {
-		mod.createCalc("app");
-		mod.createCalc("app2");
-		mod.createCalc("app3");
-		mod.createSlider("app4");
+		mod.createComponent("app","Calc");
+		mod.createComponent("app2","Calc");
+		mod.createComponent("app3","Calc");
+		mod.createComponent("app4","Slider");
+		mod.createComponent("app5","SideMenu");
+		mod.createComponent("app6","JsonTable");
 	}
   );
 </script>

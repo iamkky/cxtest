@@ -105,17 +105,24 @@ function awtkModule() {
 
 	this.wasmFetchHandler = function(response, component, handler)
 	{
+		console.log(">>>> wasmFetchHandler >>>>");
+		console.log(response);
 		const response_ws = this.wasmStringNew(response);
+		console.log(">>>> wasmFetchHandler 2 >>>>");
 		this.exports.globalFetchHandler2(response_ws, component, handler);	
+		console.log(">>>> wasmFetchHandler 3 >>>>");
 		this.exports.stringBufferFree_(response_ws);
+		console.log(">>>> wasmFetchHandler 4 >>>>");
 	}
 
 
 	this.wasmFetch = function(url_ws, component, handler)
 	{
+		console.log(">>>> wasmFetch >>>>");
 		const url = this.wasmGetString(url_ws);
 		// not tested, i think the bind is needed.. But not tested
-		fetch(url).then(response => response.text()).then(response => this.wasmFetchHandler(response, component, handler).bind(this));
+		//fetch(url).then(response => response.text()).then(response => this.wasmFetchHandler(response, component, handler).bind(this));
+		fetch(url).then(response => response.text()).then(response => this.wasmFetchHandler(response, component, handler));
 	}
 
 

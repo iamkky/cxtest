@@ -14,8 +14,12 @@
 #include <awtk/api.h>
 #include <awtk/HComponent.h>
 
+#include <abjson/json.h>
+
 #include "Calc.h"
 #include "Slider.cx.h"
+#include "SideMenu.cx.h"
+#include "JsonTable.cx.h"
 
 //int globalHandlerHook(int type, StringBuffer void *component, StringBuffer value)
 int globalHandlerHook(int type, StringBuffer event_type, void *component, StringBuffer value)
@@ -62,6 +66,22 @@ He	e;
 HComponent component_list[MAX_COMPONENT];
 int	component_list_size;
 
+
+const char	*fields[7] = {
+			"id",
+			"name",
+			"email",
+			"about",
+			"token",
+			"profilePicture",
+			"liveLocation"
+		};
+const char	*sortBy[7] = {
+		"+name",
+		NULL
+		};
+
+
 wasmExport
 void createComponent(StringBuffer id, StringBuffer format)
 {
@@ -86,6 +106,10 @@ void createComponent(StringBuffer id, StringBuffer format)
 		component_list[component_list_size] = (HComponent)CNew(Calc);
 	}else if(!stringBufferCompare(format,"Slider")){
 		component_list[component_list_size] = (HComponent)CNew(Slider);
+	}else if(!stringBufferCompare(format,"SideMenu")){
+		component_list[component_list_size] = (HComponent)CNew(SideMenu);
+	}else if(!stringBufferCompare(format,"JsonTable")){
+		component_list[component_list_size] = (HComponent)CNew(JsonTable, "json/employee.json", 7, fields, sortBy);
 	}else{
 		errLogf("Unknow component %s", stringBufferGetBuffer(format));
 		return;
