@@ -14,7 +14,7 @@
 #include <abjson/json.h>
 
 Class(JsonTable) {
-	HComponent_st   hcomponent;
+	HComponent_st   super;
 	JsonValue	table;
 	StringBuffer	dataString;
 	int		dataFetched;
@@ -38,7 +38,7 @@ Constructor(JsonTable, char *url)
 	CInit(JsonTable);
 	HComponentConstructor((HComponent)self);
 
-	self->hcomponent.render = jsonTableRender;
+	self->super.render = jsonTableRender;
 
 	self->dataFetched = 0;
 
@@ -162,10 +162,12 @@ He		htable, hrow, hcell, dir, list;
 JsonValue	field, j, l;
 int		n, f;
 
-	if(self->table == NULL) return NULL;
+	if(self->table == NULL) {
+		return {% <div class="json" id={self->super.id}> No Table </div> %};
+	}
 
 	if(jsonValueGetType(self->table) != JSON_ARRAY) {
-		return {% <div class="json"> Not a Table </div> %};
+		return {% <div class="json" id={self->super.id}> No Table </div> %};
 	}
 
 	errLogf("Teste");
@@ -202,5 +204,5 @@ int		n, f;
 		}
 	}
 
-	return {% <div class="json">  [htable] </div> %};
+	return {% <div class="json" id={self->super.id}>  [htable] </div> %};
 }
