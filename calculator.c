@@ -66,22 +66,6 @@ He	e;
 HComponent component_list[MAX_COMPONENT];
 int	component_list_size;
 
-
-const char	*fields[7] = {
-			"id",
-			"name",
-			"email",
-			"about",
-			"token",
-			"profilePicture",
-			"liveLocation"
-		};
-const char	*sortBy[7] = {
-		"+name",
-		NULL
-		};
-
-
 wasmExport
 void createComponent(StringBuffer id, StringBuffer format)
 {
@@ -109,7 +93,7 @@ void createComponent(StringBuffer id, StringBuffer format)
 	}else if(!stringBufferCompare(format,"SideMenu")){
 		component_list[component_list_size] = (HComponent)CNew(SideMenu);
 	}else if(!stringBufferCompare(format,"JsonTable")){
-		component_list[component_list_size] = (HComponent)CNew(JsonTable, "json/employee.json", 7, fields, sortBy);
+		component_list[component_list_size] = (HComponent)CNew(JsonTable, "json/employee.json");
 	}else{
 		errLogf("Unknow component %s", stringBufferGetBuffer(format));
 		return;
