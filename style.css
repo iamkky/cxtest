@@ -187,6 +187,7 @@ body	{
 	background-image: linear-gradient(#f9f9f9,#e4e4e4);
 }
 
+/*
 .table_pair{
 	background-color: #f3f6fa;
 }
@@ -194,6 +195,7 @@ body	{
 .table_even{
 	background-color: #fff;
 }
+*/
 
 .table_sort_up{
 	border: 4px solid #15151500;
