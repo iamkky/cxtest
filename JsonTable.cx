@@ -40,13 +40,12 @@ Constructor(JsonTable, char *url)
 
 	self->super.render = jsonTableRender;
 
+	self->table = NULL;
 	self->dataFetched = 0;
-
-	self->sortFields = NULL;
-	self->sorted = 0;
-
 	self->nfields = 0;
 	self->f = CNew(AVec);
+	self->sortFields = NULL;
+	self->sorted = 0;
 
 	if(self->dataFetched==0){
 		//wasmFetch("json/MOCK_DATA.json", self, jsonTableDataFetchHandler);	

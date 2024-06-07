@@ -19,6 +19,6 @@ ${DIRS}:
 	${MAKE} -C $@ $(MAKECMDGOALS)
 
 clean::
-	rm -f ${LIB} ${OBJS} ${CLEANLIST} ${EXECOBJS} ${EXEC}
+	rm -f ${LIB} ${OBJS} ${CLEANLIST} ${EXECOBJS} ${EXEC} *.cx.h *.c.h
 	for a in ${DIRS}; do ${MAKE} -C $$a clean; done
 

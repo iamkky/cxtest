@@ -1,6 +1,8 @@
 # WASM enviroment variables
 .SUFFIXES: .wasm
 
+WASMDEBUG=-g
+
 %.wasm: %.o
 	$(LINK.o) $^ $(LOADLIBES) $(LDLIBS) -o $@
 
@@ -16,10 +18,10 @@ ifeq ($(WASM),yes)
 	UNDEF_SYMS=-u globalHandler
 
 #	CFLAGS+=--target=wasm32-unknown-wasi --sysroot $(WASI_SYSROOT) --no-standard-libraries -O2 -DNDEBUG -DWASM=yes
-	CFLAGS+=--target=wasm32-unknown-wasi --sysroot $(WASI_SYSROOT) -O2 -DNDEBUG -DWASM=yes -DUSE_MP_PRINTF=yes
-	CXXFLAGS+=--target=wasm32-unknown-wasi --sysroot $(WASI_SYSROOT) -O2 -DNDEBUG -DWASM=yes -DUSE_MP_PRINTF=yes
-	LDFLAGS+=-v --target=wasm32-unknown-wasi --sysroot $(WASI_SYSROOT) -Wl,--allow-undefined -Wl,--import-memory -Wl,--export-dynamic -Wl,--no-entry -O2 -L$(WASI_SYSROOT)/lib/wasm32-wasi -lc
-	WASMLDFLAGS=-L$(WASI_SYSROOT)/lib/wasm32-wasi --allow-undefined --import-memory --export-dynamic --no-entry -lc
+	CFLAGS+=$(WASMDEBUG) --target=wasm32-unknown-wasi --sysroot $(WASI_SYSROOT) -O2 -DNDEBUG -DWASM=yes -DUSE_MP_PRINTF=yes
+	CXXFLAGS+=$(WASMDEBUG) --target=wasm32-unknown-wasi --sysroot $(WASI_SYSROOT) -O2 -DNDEBUG -DWASM=yes -DUSE_MP_PRINTF=yes
+	LDFLAGS+=$(WASMDEBUG) -v --target=wasm32-unknown-wasi --sysroot $(WASI_SYSROOT) -Wl,--allow-undefined -Wl,--import-memory -Wl,--export-dynamic -Wl,--no-entry -O2 -L$(WASI_SYSROOT)/lib/wasm32-wasi -lc
+	WASMLDFLAGS=$(WASMDEBUG) -L$(WASI_SYSROOT)/lib/wasm32-wasi --allow-undefined --import-memory --export-dynamic --no-entry -lc
 	LDFLAGS+=-nostartfiles
 endif
 

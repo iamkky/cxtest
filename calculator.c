@@ -16,7 +16,7 @@
 
 #include <abjson/json.h>
 
-#include "Calc.h"
+#include "Calc.cx.h"
 #include "Slider.cx.h"
 #include "SideMenu.cx.h"
 #include "JsonTable.cx.h"

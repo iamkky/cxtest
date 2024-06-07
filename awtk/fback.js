@@ -72,10 +72,10 @@ var face = el.t;
 				attr = el.at[index];
 				if(attr.n == "onClick"){
 					const h = parseHandlerCoding(attr.v);
-					elnew.addEventListener('click', function(event){handler(event, h.v, h.p, h.c)});
+					elnew.addEventListener('click', function(event){handler(event, h.v, h.p, h.c, el.i)});
 				}else if(attr.n == "onMouseDown"){
 					const h = parseHandlerCoding(attr.v);
-					elnew.addEventListener('mousedown', function(event){handler(event, h.v, h.p, h.c)});
+					elnew.addEventListener('mousedown', function(event){handler(event, h.v, h.p, h.c, el.i)});
 				}else{
 					elnew.setAttribute(attr.n, attr.v);
 				}

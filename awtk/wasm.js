@@ -86,18 +86,18 @@ function awtkModule() {
 		console.log(msg);
 	}
 
-	this.globalHandler = function(event, v, p, c)
+	this.globalHandler = function(event, v, p, c, id)
 	{
 		console.log("HANDLER: VALUE:>>" + v + "<< P:>>" + p + "<< C:>>" + c + "<<");
-		this.handlerGateway(event, p, c, v);
+		this.handlerGateway(event, v, p, c, id);
 	}
 
-	this.handlerGateway = function(event, pointer, component, value)
+	this.handlerGateway = function(event, value, pointer, component, id)
 	{
 		const f = event.target.fback;
 		const value_sb = this.wasmStringNew(value);
 		const event_type = this.wasmStringNew(event.type);
-		//console.log("V: "+f.EV+" P:"+f.EP+" C:"+f.EC);
+		console.log("V: "+f.EV+" P:"+f.EP+" C:"+f.EC+" id:"+id);
 		this.exports.globalHandler_(event_type, pointer, component, value_sb);
 		this.exports.stringBufferFree_(event_type);
 		this.exports.stringBufferFree_(value_sb);

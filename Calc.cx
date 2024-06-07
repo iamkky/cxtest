@@ -1,7 +1,7 @@
 #include <string.h>
 #include "abd/printf.h"
 
-//HEADERX(Calc.h,_HTE_CALC_COMPONENT_H_)
+//HEADERX(Calc.cx.h,_HTE_CALC_COMPONENT_H_)
 #include <awtk/HComponent.h>
 
 Class(Calc) {
