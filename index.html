@@ -5,7 +5,7 @@
 <link rel="stylesheet" href="style.css">
 <script TYPE="text/javascript" src="awtk/fback.js"></script>
 <script TYPE="text/javascript" src="awtk/wasm.js"></script>
-<script TYPE="text/javascript" src="calculator.js"></script>
+<script TYPE="text/javascript" src="components.js"></script>
 <script>
 // Opens dropdown
 function showDropDown() {
@@ -56,7 +56,7 @@ window.onclick = function(event) {
 	<br>
 </BODY>
 <script>
-startAwtkComponentGateway("calculator.wasm")
+startAwtkComponentGateway("components.wasm")
   .then(
 	(mod) => {
 		mod.createComponent("app","Calc");

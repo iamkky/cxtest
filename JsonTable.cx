@@ -49,14 +49,9 @@ char *url = NULL;
 	self->sortFields = NULL;
 	self->sorted = 0;
 
-	errLogf("XXXXXXXXXXXXXXXX: %s\n", jsonValueGetAsString(attributes));
-
 	url = hcomponentGetAttributeAsString((HComponent)self, "url");
 
-	errLogf("XXXXXXXXXXXXXXXX: %s\n", url);
-
 	if(url) jsonTableLoadFromUrl(self, url);
-	//wasmFetch(url, self, jsonTableDataFetchHandler);	
 
 	return self;
 }
@@ -89,6 +84,7 @@ int lcount, result;
 } 
 
 // Manages table header click callback
+// Disable since the migartion from old abjson
 int static jsonTableClickHandler(void *component, char *value)
 {
 JsonTable self = (JsonTable)component;
