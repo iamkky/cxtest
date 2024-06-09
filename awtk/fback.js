@@ -31,8 +31,8 @@ const decoded = {p:"", c:"", v:""};
 
 	decoded.v = str.substring(fp1+1);
 
-	console.log("parseHandlerCoding");
-	console.log(decoded);
+	//console.log("parseHandlerCoding");
+	//console.log(decoded);
 	return decoded;
 }
 

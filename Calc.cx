@@ -188,7 +188,7 @@ Calc self = (Calc)component;
 
 	//<div class="calc" id={self->super.id}>
 	return {%
-	<div class="calc">
+	<div class="cx-calc">
 		<calcPainelRender(self) />
 		<calcKeyboardRender(self) />
 	</div>

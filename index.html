@@ -29,7 +29,7 @@ window.onclick = function(event) {
 </head>
 <BODY>
 	<div class="size" style="display:flex" >
-		<div id="app"></div>
+		<div id="app1"></div>
 		<div style="padding: 30px">
 			<div class="dropdown" onclick="event.stopPropagation()">
 				<button onclick="showDropDown()" class="dropbtn">Calc in a Dropdown</button>
@@ -38,10 +38,10 @@ window.onclick = function(event) {
 				</div>
 			</div>
 		</div>
+		<div id="app3"></div>
 	</div>
 	<br>
 	<div class="size" style="display:flex" >
-		<div id="app3"></div>
 		<div style="width:300px">
 			<div id="app4"></div>
 		</div>
@@ -59,9 +59,9 @@ window.onclick = function(event) {
 startAwtkComponentGateway("components.wasm")
   .then(
 	(mod) => {
-		mod.createComponent("app","Calc");
-		//mod.createComponent("app2","Calc");
-		//mod.createComponent("app3","Calc");
+		mod.createComponent("app1","Calc");
+		mod.createComponent("app2","Calc");
+		mod.createComponent("app3","Calc");
 		//mod.createComponent("app4","Slider");
 		//mod.createComponent("app5","SideMenu");
 		mod.createComponent("app6","JsonTable",{"url":"json/employee.json"});

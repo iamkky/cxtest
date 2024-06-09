@@ -166,11 +166,11 @@ JsonValue	field, row, l;
 int		n, f;
 
 	if(nullAssert(self) || nullAssert(self->table)) {
-		return {% <div class="json"> No Table </div> %};
+		return {% <div class="cx-jsontable"> No Table </div> %};
 	}
 
 	if(jsonValueGetType(self->table) != JSON_ARRAY) {
-		return {% <div class="json"> No Table </div> %};
+		return {% <div class="cx-jsontable"> No Table </div> %};
 	}
 
 	if(!self->sorted){
@@ -206,5 +206,5 @@ int		n, f;
 		}
 	}
 
-	return {% <div class="json"> [htable] </div> %};
+	return {% <div class="cx-jsontable"> [htable] </div> %};
 }
