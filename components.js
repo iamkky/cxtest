@@ -8,7 +8,6 @@ async function startAwtkComponentGateway(url)
 		const format_sb = mod.wasmStringNew(component_name);
 		const id_sb = mod.wasmStringNew(id);
 		const attributes_sb = mod.wasmStringNew(JSON.stringify(attributes));
-		console.log("Teste: " + JSON.stringify(attributes));
 		console.log(format_sb);
 		console.log(id_sb);
 		mod.exports.createComponent(id_sb, format_sb, attributes_sb);
