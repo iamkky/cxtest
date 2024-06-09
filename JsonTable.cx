@@ -7,6 +7,7 @@
 #include <abd/sort.h>
 
 #include <awtk/api.h>
+#include <awtk/util.h>
 
 //HEADERX(JsonTable.cx.h, _JSONTABLE_COMPONENT_H_)
 #include <awtk/HComponent.h>
@@ -16,49 +17,61 @@
 Class(JsonTable) {
 	HComponent_st   super;
 	JsonValue	table;
-	StringBuffer	dataString;
-	int		dataFetched;
 	int		nfields;
-	AVec		f;
+	AVec		fields;
 	char		**sortFields;
 	int		sorted;
 };
 
-Constructor(JsonTable, char *url);
+Constructor(JsonTable, JsonValue attributes);
+Destructor(JsonTable);
 
 He	jsonTableRender(HComponent component);
-int	jsonTableDetectFields(JsonTable self);
+int	jsonTableLoadFromUrl(JsonTable self, char *url);
 
 //ENDX
 
+int static jsonTableDetectFields(JsonTable self);
 int static jsonTableDataFetchHandler(void *component, StringBuffer sb);
 
-Constructor(JsonTable, char *url)
+Constructor(JsonTable, JsonValue attributes)
 {
+char *url = NULL;
+
 	CInit(JsonTable);
-	HComponentConstructor((HComponent)self);
+	HComponentConstructor((HComponent)self, attributes);
 
 	self->super.render = jsonTableRender;
 
 	self->table = NULL;
-	self->dataFetched = 0;
 	self->nfields = 0;
-	self->f = CNew(AVec);
+	self->fields = CNew(AVec);
 	self->sortFields = NULL;
 	self->sorted = 0;
 
-	if(self->dataFetched==0){
-		//wasmFetch("json/MOCK_DATA.json", self, jsonTableDataFetchHandler);	
-		wasmFetch(url, self, jsonTableDataFetchHandler);	
-		self->dataFetched = 1;
-	}
+	errLogf("XXXXXXXXXXXXXXXX: %s\n", jsonValueGetAsString(attributes));
+
+	url = hcomponentGetAttributeAsString((HComponent)self, "url");
+
+	errLogf("XXXXXXXXXXXXXXXX: %s\n", url);
+
+	if(url) jsonTableLoadFromUrl(self, url);
+	//wasmFetch(url, self, jsonTableDataFetchHandler);	
 
 	return self;
 }
 
+Destructor(JsonTable)
+{
+	if(nullAssert(self)) return;
+
+	jsonValueFree(self->table);
+	AVecFree(self->fields);
+	free(self);
+}
+
 ///// Handlers
 /////
-
 
 int static jsonTableDataFetchHandler(void *component, StringBuffer sb)
 {
@@ -67,21 +80,10 @@ JsonValue  j;
 JsonParser jp;
 int lcount, result;
 
-	errLogf("TESTE RESP: %80.80s\n", sb->buffer);
+	if(nullAssert(self)) return -1;
 
-	self->dataString = sb;
-
-	jp = JsonParserNew(sb->buffer, &lcount);
-	lcount = 0;
-	result = JsonParserParse(jp);
-	if(result>0){
-		self->table = jp->value[0].value;
-		jsonTableDetectFields(self);
-	}else{
-		self->table = NULL;
-	}
-
-	JsonParserFree(jp);
+	self->table = awtkParsesJson(sb);
+	jsonTableDetectFields(self);
 
 	return 0;
 } 
@@ -92,7 +94,7 @@ int static jsonTableClickHandler(void *component, char *value)
 JsonTable self = (JsonTable)component;
 char	  dir = '+';
 
-	errLogf("clickTable %s", value);
+	if(nullAssert(self)) return -1;
 
 	if(!strcmp(self->sortFields[0]+1, value)){
 		if(self->sortFields[0][0]=='+'){
@@ -109,28 +111,29 @@ char	  dir = '+';
 	return 0;
 }
 
-int jsonTableDetectFields(JsonTable self)
+int static jsonTableDetectFields(JsonTable self)
 {
 JsonValue	row;
-int		f, n;
-void 		*kkk;
+int		cc, nn;
 
-	if(self->f) {
-		AVecFree(self->f);
-		self->f = NULL;
+	if(nullAssert(self)) return -1;
+	if(nullAssert(self->table)) return -1;
+	
+	if(self->fields){
+		AVecFree(self->fields);
 	}
 
-	self->f = CNew(AVec);
+	self->fields = CNew(AVec);
 
 	if(jsonValueGetType(self->table) != JSON_ARRAY) return -1;
 
-	for(n=0; n<jsonValueGetLength(self->table); n++){
-		row = jsonValueGet_i(self->table, n);
+	for(nn=0; nn<jsonValueGetLength(self->table); nn++){
+		row = jsonValueGet_i(self->table, nn);
 
 		if(row==NULL || jsonValueGetType(row)!=JSON_OBJECT) continue;
 
-		for(f=0; f<jsonValueGetLength(row); f++){
-			aVecAppend(self->f, jsonValueGet_ik(row, f));
+		for(cc=0; cc<jsonValueGetLength(row); cc++){
+			aVecAppend(self->fields, jsonValueGet_ik(row, cc));
 		}
 
 		break;
@@ -139,37 +142,41 @@ void 		*kkk;
 	return 0;
 }
 
-int static jsonTableCheckSortFields(char **sortFields, char *field)
+int static checkSortFields(char **sortFields, char *field)
 {
-
 	while(*sortFields){
 		if(!strcmp((*sortFields)+1, field)){
 			return (sortFields[0][0]=='-') ? -1 : 1;
 		}
 		sortFields++;
 	}
+	return 0;
+}
+
+int jsonTableLoadFromUrl(JsonTable self, char *url)
+{
+	if(nullAssert(self)) return -1;
+
+	wasmFetch(url, self, jsonTableDataFetchHandler);	
 
 	return 0;
 }
 
-
-//JsonValue table, int nfields, char **fields, char **sortFields)
 He jsonTableRender(HComponent component)
 {
 JsonTable	self = (JsonTable)component;
 He		htable, hrow, hcell, dir, list;
-JsonValue	field, j, l;
+JsonValue	field, row, l;
 int		n, f;
 
-	if(self->table == NULL) {
-		return {% <div class="json" id={self->super.id}> No Table </div> %};
+	if(nullAssert(self) || nullAssert(self->table)) {
+		return {% <div class="json"> No Table </div> %};
 	}
 
 	if(jsonValueGetType(self->table) != JSON_ARRAY) {
-		return {% <div class="json" id={self->super.id}> No Table </div> %};
+		return {% <div class="json"> No Table </div> %};
 	}
 
-	errLogf("Teste");
 	if(!self->sorted){
 		//jsonValueObjectArraySort(self->table, self->sortFields);
 		self->sorted = 1;
@@ -177,21 +184,21 @@ int		n, f;
 
 	htable = {% <table class="teste"> </table> %};
 	hrow = {% <tr class="teste_row"> </tr> %};
-	for(f=0; f<aVecGetSize(self->f); f++){
-		//int s = jsonTableCheckSortFields(self->sortFields, self->fields[f]);
+	for(f=0; f<aVecGetSize(self->fields); f++){
+		//int s = checkSortFields(self->sortFields, self->fields[f]);
 		heAddChild(hrow,
 			//{% <th class="table_header"> <div class={s==0 ? NULL : (s==1? "table_sort_down" : "table_sort_up")}> </div> {self->fields[f]} </th> %}
-			{% <th class="table_header"> <div class="table_sort_down"> </div> {aVecGetItem(self->f, f)} </th> %}
+			{% <th class="table_header"> <div class="table_sort_down"> </div> {aVecGetItem(self->fields, f)} </th> %}
 		);
 	}
 	heAddChild(htable, hrow);
 
 	for(n=0; n<jsonValueGetLength(self->table); n++){
-		j = jsonValueGet_i(self->table, n);
-		if(j==NULL || jsonValueGetType(j)!=JSON_OBJECT) continue;
+		row = jsonValueGet_i(self->table, n);
+		if(row==NULL || jsonValueGetType(row)!=JSON_OBJECT) continue;
 		heAddChild(htable, hrow = {% <tr class="teste_row"> </tr> %} );
-		for(f=0; f<aVecGetSize(self->f); f++){
-			field = jsonValueGet_k(j, aVecGetItem(self->f, f));
+		for(f=0; f<aVecGetSize(self->fields); f++){
+			field = jsonValueGet_k(row, aVecGetItem(self->fields, f));
 			heAddChild(hrow, {%
 					<td class="table_header"> 
 						<div class={n%2?"table_cell table_even":"table_cell table_pair"}>
@@ -203,5 +210,5 @@ int		n, f;
 		}
 	}
 
-	return {% <div class="json" id={self->super.id}>  [htable] </div> %};
+	return {% <div class="json"> [htable] </div> %};
 }

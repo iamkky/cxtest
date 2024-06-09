@@ -9,7 +9,7 @@ Class(Slider) {
 	double		position;
 };
 
-Constructor(Slider);
+Constructor(Slider, JsonValue attributes);
 Destructor(Slider);
 
 He	sliderRender(HComponent self);
@@ -17,10 +17,10 @@ int	sliderClickHandler(StringBuffer event_type, void *component, StringBuffer va
 
 //ENDX
 
-Constructor(Slider)
+Constructor(Slider, JsonValue attributes)
 {
 	CInit(Slider);
-	HComponentConstructor((HComponent)self);
+	HComponentConstructor((HComponent)self, attributes);
 
 	self->super.render = sliderRender;
 
@@ -47,8 +47,9 @@ He sliderRender(HComponent component)
 {
 Slider self = (Slider)component;
 
+	//<span class="cx-slider-root" id={self->super.id}>
 	return {%
-	<span class="cx-slider-root" id={self->super.id}>
+	<span class="cx-slider-root">
 		<span class="cx-slider-track"></span>
 		<span class="cx-slider-left" style={{"width: %5.2f%%", self->position}} ></span>
 		<span class="cx-slider-thumb" style={{"left: %5.2f%%", self->position}} onMouseDown=sliderClickHandler(("C"))></span>

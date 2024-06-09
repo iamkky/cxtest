@@ -12,7 +12,7 @@ Class(SideMenu) {
 	int		decimalFlag;
 };
 
-Constructor(SideMenu);
+Constructor(SideMenu, JsonValue attributes);
 Destructor(SideMenu);
 
 He	sideMenuRender(HComponent self);
@@ -20,10 +20,10 @@ int	sideMenuClickHandler(StringBuffer event_type, void *component, StringBuffer 
 
 //ENDX
 
-Constructor(SideMenu)
+Constructor(SideMenu, JsonValue attributes)
 {
 	CInit(SideMenu);
-	HComponentConstructor((HComponent)self);
+	HComponentConstructor((HComponent)self, attributes);
 
 	self->super.render = sideMenuRender;
 

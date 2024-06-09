@@ -12,6 +12,7 @@
 #include <helium/He.h>
 
 #include <awtk/api.h>
+#include <awtk/util.h>
 #include <awtk/HComponent.h>
 
 #include <abjson/json.h>
@@ -20,6 +21,11 @@
 #include "Slider.cx.h"
 #include "SideMenu.cx.h"
 #include "JsonTable.cx.h"
+
+#define MAX_COMPONENT 128
+
+HComponent	component_list[MAX_COMPONENT];
+int		component_list_size;
 
 //int globalHandlerHook(int type, StringBuffer void *component, StringBuffer value)
 int globalHandlerHook(int type, StringBuffer event_type, void *component, StringBuffer value)
@@ -32,7 +38,8 @@ He	e;
         //memMonitor((char *)0x34dd0, 16);
 	errLogf("AppRender");
 	if(component){
-		e = ((HComponent)component)->render((HComponent)component);
+		//e = ((HComponent)component)->render((HComponent)component);
+		e = hcomponentRender((HComponent)component);
 
         	//memMonitor((char *)0x34dd0, 16);
 		json_str = StringBufferNew(2000);
@@ -61,15 +68,10 @@ He	e;
 	return 0;
 }
 
-#define MAX_COMPONENT 128
-
-HComponent component_list[MAX_COMPONENT];
-int	component_list_size;
-
 wasmExport
-void createComponent(StringBuffer id, StringBuffer format)
+void createComponent(StringBuffer id, StringBuffer format, StringBuffer attributes)
 {
-	//errLogf("TESTE >%s< !", stringBufferGetBuffer(format));
+JsonValue attr;
 
 	if(nullAssert(id)){
 		errLogf("createComponent: NULL id (stringbuffer)");
@@ -86,14 +88,25 @@ void createComponent(StringBuffer id, StringBuffer format)
 		return;
 	}
 
+	if(attributes){
+		errLogf("attributes %s", stringBufferGetBuffer(attributes));
+	}
+
+	if(stringBufferLength(attributes)>0){
+		attr = awtkParsesJson(attributes);
+	}else{
+		attr = NULL;
+	}
+
 	if(!stringBufferCompare(format,"Calc")){
-		component_list[component_list_size] = (HComponent)CNew(Calc);
+		component_list[component_list_size] = (HComponent)CNew(Calc, attr);
 	}else if(!stringBufferCompare(format,"Slider")){
-		component_list[component_list_size] = (HComponent)CNew(Slider);
+		component_list[component_list_size] = (HComponent)CNew(Slider, attr);
 	}else if(!stringBufferCompare(format,"SideMenu")){
-		component_list[component_list_size] = (HComponent)CNew(SideMenu);
+		component_list[component_list_size] = (HComponent)CNew(SideMenu, attr);
 	}else if(!stringBufferCompare(format,"JsonTable")){
-		component_list[component_list_size] = (HComponent)CNew(JsonTable, "json/employee.json");
+		//component_list[component_list_size] = (HComponent)CNew(JsonTable, "json/employee.json");
+		component_list[component_list_size] = (HComponent)CNew(JsonTable, attr);
 	}else{
 		errLogf("Unknow component %s", stringBufferGetBuffer(format));
 		return;
