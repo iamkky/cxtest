@@ -66,18 +66,13 @@ int sideMenuLoadFromUrl(SideMenu  self, char *url)
 int sideMenuClickHandler(StringBuffer event_type, void *component, StringBuffer value)
 {
 SideMenu self = (SideMenu)component;
-char	ch;
+char	*value_ptr;
 
-	errLogf("Teste char >%s<\n", value->buffer);
+	if(nullAssert(value)) return 0;
 
-	if(value==NULL) return 0;
-	if(value->buffer==NULL) return 0;
-	ch = *(value->buffer);
+	value_ptr = stringBufferGetBuffer(value);
 
-	switch(ch){
-	case '+':;
-	case '-':;
-	}
+	errLogf("sideMenuClickHandler >%s<\n", value_ptr);
 
 	return 0;
 }
@@ -93,7 +88,7 @@ char *title, *icon, *href;
 	href  = jsonValueGetAsString(jsonValueGet_k(menu_item, "href"));
 
 	return {%
-	<li class="cx-sidemenu-item">
+	<li class="cx-sidemenu-item" onClick=sideMenuClickHandler(("C"))>
 		<a href={href}> <i class={icon} />  <span class="cx-sidemenu-title"> {title} </span> </a>
 	</li>
 	%};
@@ -130,10 +125,18 @@ He		ulist;
 He sideMenuRender(HComponent component)
 {
 SideMenu self = (SideMenu)component;
+JsonValue tmp, second_menu;
+
+	if(jsonValueGetType(self->menu)==JSON_OBJECT) {
+		tmp = jsonValueGet_k(self->menu, "items");
+		tmp = jsonValueGet_i(self->menu, 1);
+		second_menu = jsonValueGet_k(tmp, "items");
+	}
 
 	return {%
 	<div class="cx-sidemenu">
 		<sideMenuBar(self, self->menu) />
+		<sideMenuBar(self, second_menu) />
 	</div>
 	%};
 }
