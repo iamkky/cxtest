@@ -1,0 +1,303 @@
+{
+  "title": "Main",
+  "icon": "no icon",
+  "href": "#overview",
+  "items": [
+    {
+      "title": "Visão geral",
+      "icon": "fa fa-eye",
+      "href": "#overview",
+      "items": [
+        {
+          "title": "Dashboards",
+          "icon": "fa fa-tachometer-alt",
+          "href": "#dashboards"
+        }
+      ]
+    },
+    {
+      "title": "Dados históricos",
+      "icon": "fa fa-history",
+      "href": "#historical_data",
+      "items": [
+        {
+          "title": "Favoritos",
+          "icon": "fa fa-star",
+          "href": "#favorites"
+        },
+        {
+          "title": "Grupos",
+          "icon": "fa fa-users",
+          "href": "#groups"
+        },
+        {
+          "title": "Dispositivos",
+          "icon": "fa fa-desktop",
+          "href": "#devices"
+        },
+        {
+          "title": "Probes",
+          "icon": "fa fa-search",
+          "href": "#probes"
+        },
+        {
+          "title": "Graph set",
+          "icon": "fa fa-chart-line",
+          "href": "#graph_set"
+        },
+        {
+          "title": "Circuito",
+          "icon": "fa fa-project-diagram",
+          "href": "#circuit"
+        },
+        {
+          "title": "Histórico de rota",
+          "icon": "fa fa-route",
+          "href": "#route_history"
+        }
+      ]
+    },
+    {
+      "title": "Configuração",
+      "icon": "fa fa-cogs",
+      "href": "#configuration",
+      "items": [
+        {
+          "title": "Perfis",
+          "icon": "fa fa-id-card",
+          "href": "#profiles"
+        },
+        {
+          "title": "Unidades",
+          "icon": "fa fa-cube",
+          "href": "#units"
+        },
+        {
+          "title": "QoS",
+          "icon": "fa fa-tasks",
+          "href": "#qos"
+        },
+        {
+          "title": "Coletoras",
+          "icon": "fa fa-database",
+          "href": "#collectors"
+        },
+        {
+          "title": "Objetos",
+          "icon": "fa fa-object-group",
+          "href": "#objects"
+        },
+        {
+          "title": "Mapeadores",
+          "icon": "fa fa-map",
+          "href": "#mappers"
+        },
+        {
+          "title": "Manutenção",
+          "icon": "fa fa-wrench",
+          "href": "#maintenance"
+        },
+        {
+          "title": "ICMP Polling",
+          "icon": "fa fa-poll",
+          "href": "#icmp_polling"
+        },
+        {
+          "title": "Tipos de Probe",
+          "icon": "fa fa-stethoscope",
+          "href": "#probe_types"
+        },
+        {
+          "title": "Trap receiver",
+          "icon": "fa fa-bell",
+          "href": "#trap_receiver"
+        },
+        {
+          "title": "Regras",
+          "icon": "fa fa-gavel",
+          "href": "#rules"
+        },
+        {
+          "title": "Scripts",
+          "icon": "fa fa-code",
+          "href": "#scripts"
+        },
+        {
+          "title": "Credencial de dispositivo",
+          "icon": "fa fa-key",
+          "href": "#device_credential"
+        },
+        {
+          "title": "Filtro de syslog",
+          "icon": "fa fa-filter",
+          "href": "#syslog_filter"
+        },
+        {
+          "title": "Templates de Horário",
+          "icon": "fa fa-clock",
+          "href": "#time_templates"
+        },
+        {
+          "title": "Ranges",
+          "icon": "fa fa-arrows-alt",
+          "href": "#ranges"
+        }
+      ]
+    },
+    {
+      "title": "Ferramentas",
+      "icon": "fa fa-tools",
+      "href": "#tools",
+      "items": [
+        {
+          "title": "NOC display",
+          "icon": "fa fa-tv",
+          "href": "#noc_display"
+        },
+        {
+          "title": "Discovery",
+          "icon": "fa fa-search-plus",
+          "href": "#discovery"
+        },
+        {
+          "title": "MIB browser",
+          "icon": "fa fa-sitemap",
+          "href": "#mib_browser"
+        },
+        {
+          "title": "Software externo",
+          "icon": "fa fa-external-link-alt",
+          "href": "#external_software"
+        }
+      ]
+    },
+    {
+      "title": "Sistema",
+      "icon": "fa fa-server",
+      "href": "#system",
+      "items": [
+        {
+          "title": "Registro de acesso",
+          "icon": "fa fa-sign-in-alt",
+          "href": "#access_log"
+        },
+        {
+          "title": "Backup/Restore",
+          "icon": "fa fa-cloud-upload-alt",
+          "href": "#backup_restore"
+        },
+        {
+          "title": "Parâmetros",
+          "icon": "fa fa-sliders-h",
+          "href": "#parameters"
+        },
+        {
+          "title": "Geren. de MIBs",
+          "icon": "fa fa-database",
+          "href": "#mib_management"
+        },
+        {
+          "title": "Usuários",
+          "icon": "fa fa-user",
+          "href": "#users"
+        },
+        {
+          "title": "Fabricante",
+          "icon": "fa fa-industry",
+          "href": "#manufacturer"
+        },
+        {
+          "title": "Diagnósticos",
+          "icon": "fa fa-stethoscope",
+          "href": "#diagnostics"
+        },
+        {
+          "title": "Plugins",
+          "icon": "fa fa-plug",
+          "href": "#plugins"
+        },
+        {
+          "title": "Suporte",
+          "icon": "fa fa-life-ring",
+          "href": "#support"
+        },
+        {
+          "title": "Fuso horário",
+          "icon": "fa fa-clock",
+          "href": "#timezone"
+        },
+        {
+          "title": "Manual",
+          "icon": "fa fa-book",
+          "href": "#manual"
+        }
+      ]
+    },
+    {
+      "title": "Alarmes",
+      "icon": "fa fa-bell",
+      "href": "#alarms",
+      "items": [
+        {
+          "title": "Console",
+          "icon": "fa fa-terminal",
+          "href": "#console"
+        },
+        {
+          "title": "Alarmes",
+          "icon": "fa fa-exclamation-triangle",
+          "href": "#alarms"
+        },
+        {
+          "title": "Perfis",
+          "icon": "fa fa-id-card",
+          "href": "#profiles"
+        },
+        {
+          "title": "Alarmes de serviço",
+          "icon": "fa fa-bell",
+          "href": "#service_alarms"
+        },
+        {
+          "title": "Níveis de urgência de alarme",
+          "icon": "fa fa-exclamation-circle",
+          "href": "#alarm_urgency_levels"
+        },
+        {
+          "title": "Template do e-mail",
+          "icon": "fa fa-envelope",
+          "href": "#email_template"
+        }
+      ]
+    },
+    {
+      "title": "Relatórios",
+      "icon": "fa fa-chart-bar",
+      "href": "#reports",
+      "items": [
+        {
+          "title": "Dados históricos",
+          "icon": "fa fa-database",
+          "href": "#historical_data_reports"
+        },
+        {
+          "title": "Alarmes",
+          "icon": "fa fa-exclamation-triangle",
+          "href": "#alarm_reports"
+        }
+      ]
+    },
+    {
+      "title": "Sobre",
+      "icon": "fa fa-info-circle",
+      "href": "#about",
+      "items": [
+        {
+          "title": "Sobre",
+          "icon": "fa fa-info-circle",
+          "href": "#about_page"
+        }
+      ]
+    }
+  ]
+}

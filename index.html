@@ -2,7 +2,10 @@
 <HTML>
 <head>
 <meta charset="utf-8">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+<link rel="stylesheet" href="theme-default.css">
 <link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="menu.css">
 <script TYPE="text/javascript" src="awtk/fback.js"></script>
 <script TYPE="text/javascript" src="awtk/wasm.js"></script>
 <script TYPE="text/javascript" src="components.js"></script>
@@ -28,32 +31,31 @@ window.onclick = function(event) {
 </script>
 </head>
 <BODY>
-	<div class="size" style="display:flex" >
-		<div id="app1"></div>
-		<div style="padding: 30px">
-			<div class="dropdown" onclick="event.stopPropagation()">
-				<button onclick="showDropDown()" class="dropbtn">Calc in a Dropdown</button>
-				<div id="myDropdown" class="dropdown-content">
-					<div id="app2"></div>
-				</div>
-			</div>
-		</div>
-		<div id="app3"></div>
-	</div>
-	<br>
-	<div class="size" style="display:flex" >
-		<div style="width:300px">
-			<div id="app4"></div>
-		</div>
+	<div style="display:flex">
 		<div id="app5"></div>
+		<div>
+			<div class="size" style="display:flex" >
+				<div id="app1"></div>
+				<div style="padding: 30px">
+					<div class="dropdown" onclick="event.stopPropagation()">
+						<button onclick="showDropDown()" class="dropbtn">Calc in a Dropdown</button>
+						<div id="myDropdown" class="dropdown-content">
+							<div id="app2"></div>
+						</div>
+					</div>
+				</div>
+				<div id="app3"></div>
+			</div>
+			<br>
+			<div class="size" style="display:flex" >
+				<div id="app6"></div>
+			</div>
+			<div class="size" style="display:flex" >
+				<div id="app7"></div>
+			</div>
+			<br>
+		</div>
 	</div>
-	<div class="size" style="display:flex" >
-		<div id="app6"></div>
-	</div>
-	<div class="size" style="display:flex" >
-		<div id="app7"></div>
-	</div>
-	<br>
 </BODY>
 <script>
 startAwtkComponentGateway("components.wasm")
@@ -63,7 +65,7 @@ startAwtkComponentGateway("components.wasm")
 		mod.createComponent("app2","Calc");
 		mod.createComponent("app3","Calc");
 		//mod.createComponent("app4","Slider");
-		//mod.createComponent("app5","SideMenu");
+		mod.createComponent("app5","SideMenu",{"url":"json/menu.json"});
 		mod.createComponent("app6","JsonTable",{"url":"json/employee.json"});
 		mod.createComponent("app7","JsonTable",{"url":"json/employee.json"});
 	}

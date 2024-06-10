@@ -1,15 +1,15 @@
 #include <string.h>
 #include "abd/printf.h"
+#include "awtk/api.h"
+#include "awtk/util.h"
 
 //HEADERX(SideMenu.cx.h,_HTE_SIDEMENU_COMPONENT_H_)
 #include <awtk/HComponent.h>
+#include <abjson/json.h>
 
 Class(SideMenu) {
 	HComponent_st	super;
-	double		display;
-	double		last;
-	char		lastOper;
-	int		decimalFlag;
+	JsonValue	menu;
 };
 
 Constructor(SideMenu, JsonValue attributes);
@@ -17,20 +17,22 @@ Destructor(SideMenu);
 
 He	sideMenuRender(HComponent self);
 int	sideMenuClickHandler(StringBuffer event_type, void *component, StringBuffer value);
+int	sideMenuLoadFromUrl(SideMenu  self, char *url);
 
 //ENDX
 
 Constructor(SideMenu, JsonValue attributes)
 {
+char *url;
+
 	CInit(SideMenu);
 	HComponentConstructor((HComponent)self, attributes);
 
 	self->super.render = sideMenuRender;
 
-	self->display = 0.0;
-	self->last = 0.0;
-	self->lastOper = ' ';
-	self->decimalFlag = 0;
+	url = hcomponentGetAttributeAsString((HComponent)self, "url");
+
+	if(url) sideMenuLoadFromUrl(self, url);
 
 	return self;
 }
@@ -38,6 +40,27 @@ Constructor(SideMenu, JsonValue attributes)
 Destructor(SideMenu)
 {
 	free(self);
+}
+
+int static sideMenuDataFetchHandler(void *component, StringBuffer sb)
+{
+SideMenu   self = (SideMenu)component;
+
+	if(nullAssert(self)) return -1;
+
+	self->menu = awtkParsesJson(sb);
+	//jsonValuePrint(self->menu);
+
+	return 0;
+} 
+
+int sideMenuLoadFromUrl(SideMenu  self, char *url)
+{
+	if(nullAssert(self)) return -1;
+
+	wasmFetch(url, self, sideMenuDataFetchHandler);	
+
+	return 0;
 }
 
 int sideMenuClickHandler(StringBuffer event_type, void *component, StringBuffer value)
@@ -59,45 +82,43 @@ char	ch;
 	return 0;
 }
 
-static char *menu0[16] = { "Google", "Yahoo", "Apple", NULL };
-
-static char *menu1[16][16] = {
-	{ "Search", "Maps", "Earth", "Translate", NULL },
-	{ "Mail", "Groups", NULL },
-	{ "iCloud", "iTunes", "App Store", "Store", NULL },
-	{ NULL }
-};
-
-static int active[10] = {0, 0, 0, 0, 0, 0, 0};
-
-
-He static sideMenuItem(SideMenu self, char *href, ...)
+He static sideMenuItem(SideMenu self, JsonValue menu_item, ...)
 {
-va_list	args;
-He	children;
+char *title, *icon, *href;
 
-	children = HE_GET_CHILDREN(href);
+	if(menu_item == NULL || jsonValueGetType(menu_item)!=JSON_OBJECT) return {% <li /> %};
+
+	title = jsonValueGetAsString(jsonValueGet_k(menu_item, "title"));
+	icon  = jsonValueGetAsString(jsonValueGet_k(menu_item, "icon"));
+	href  = jsonValueGetAsString(jsonValueGet_k(menu_item, "href"));
 
 	return {%
-	<li class="sideMenuItem">
-		<a href={href}> [children]  </a>
+	<li class="cx-sidemenu-item">
+		<a href={href}> <i class={icon} />  <span class="cx-sidemenu-title"> {title} </span> </a>
 	</li>
 	%};
 }
 
-He static sideMenuBar(SideMenu self, char *itens[], int active, ...)
+He static sideMenuBar(SideMenu self, JsonValue menu, ...)
 {
-He ulist;
-int c;
+JsonValue	items, menu_item;
+int		c;
+He		ulist;
 
-	ulist = {% <ul class="sideMenuBar"> </ul> %};
+	ulist = {% <ul class="cx-sidemenu-bar"> </ul> %};
 
-	for(c=0; itens[c]; c++){
-		heAddChild(ulist, {% <sideMenuItem(self,"teste")> {itens[c]} </sideMenuItem> %});
+	if(jsonValueGetType(self->menu)!=JSON_OBJECT) return ulist;
+
+	items = jsonValueGet_k(self->menu,"items");
+	if(jsonValueGetType(items)!=JSON_ARRAY) return ulist;
+
+	for(c=0; c<jsonValueGetLength(items); c++){
+		menu_item = jsonValueGet_i(items, c);
+		heAddChild(ulist, {% <sideMenuItem(self, menu_item) /> %});
 	}
+
 	return ulist;
 }
-
 
 /*
 			<div class="keyboard_button" onClick=sideMenuClickHandler(("C"))> C </div>
@@ -111,9 +132,8 @@ He sideMenuRender(HComponent component)
 SideMenu self = (SideMenu)component;
 
 	return {%
-	<div class="sideMenu" id={self->super.id}>
-		<sideMenuBar(self, menu0, 0) />
-		<sideMenuBar(self, menu1[0], 0) />
+	<div class="cx-sidemenu">
+		<sideMenuBar(self, self->menu) />
 	</div>
 	%};
 }
