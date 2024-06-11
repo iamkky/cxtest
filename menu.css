@@ -1,11 +1,17 @@
 
 .cx-sidemenu {
-	display: inline-block;
+	display: flex;
 	min-height: 100vh;
-	background-color: #22252E;
-	float: left;
+	;float: left;
 }
 
+.cx-sidemenu-level0 {
+	background-color: #22252E;
+}
+
+.cx-sidemenu-level1 {
+	background-color: #38384A;
+}
 
 .cx-sidemenu-item {
 	display: flex;
@@ -19,17 +25,30 @@
 	transition: all ease-out 120ms;
 	font-family: sans-serif;
 	line-height: 1;
-	color: white;
+}
+
+.cx-sidemenu-item a:hover {
 }
 
 .cx-sidemenu-item:hover {
 	background-color: #38384A;
 }
 
+.cx-sidemenu-item-selected a {
+	color: white;
+}
+
+.cx-sidemenu-item-selected {
+	background-color: #38384A;
+}
+
+.cx-sidemenu-item-unselected a {
+	color: #00ff00;
+}
+
 .cx-sidemenu-item a {
 	display: flex;
 	flex-direction: column;
-	color: white;
 	text-decoration: none;
 }
 

@@ -97,8 +97,10 @@ function awtkModule() {
 		const f = event.target.fback;
 		const value_sb = this.wasmStringNew(value);
 		const event_type = this.wasmStringNew(event.type);
-		console.log("V: "+f.EV+" P:"+f.EP+" C:"+f.EC+" id:"+id);
-		this.exports.globalHandler_(event_type, pointer, component, value_sb);
+		//console.log("V: "+f.EV+" P:"+f.EP+" C:"+f.EC+" id:"+id);
+		console.log("V: "+value+" P:"+pointer+" C:"+component+" id:"+id);
+		ret = this.exports.globalHandler_(event_type, pointer, component, value_sb);
+		console.log(ret);
 		this.exports.stringBufferFree_(event_type);
 		this.exports.stringBufferFree_(value_sb);
 	}
