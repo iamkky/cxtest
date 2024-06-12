@@ -11,7 +11,7 @@ Class(SideMenu) {
 	HComponent_st	super;
 	JsonValue	menu;
 	int		sel0, sel1;
-	int		hover0;
+	int		hover0, hover1;
 };
 
 Constructor(SideMenu, JsonValue attributes);
@@ -36,6 +36,7 @@ char *url;
 	self->sel0 = 1;
 	self->sel1 = 2;
 	self->hover0 = -1;
+	self->hover1 = -1;
 
 	url = hcomponentGetAttributeAsString((HComponent)self, "url");
 
@@ -61,6 +62,49 @@ SideMenu   self = (SideMenu)component;
 	return 0;
 } 
 
+int sideMenuClickHandler(StringBuffer event_type, void *component, StringBuffer value)
+{
+SideMenu self = (SideMenu)component;
+char	 *value_ptr;
+int	 sel;
+
+	if(nullAssert(value)) return 0;
+
+	value_ptr = stringBufferGetBuffer(value);
+
+	errLogf("sideMenuClickHandler >%s<\n", value_ptr);
+
+	sel = atoi(value_ptr);
+
+	if(sel>=1000){
+		self->sel0 = sel/1000;
+		self->sel1 = sel - 1000 * self->sel0;
+	}
+
+	return 0;
+}
+
+int sideMenuMouseOverHandler(StringBuffer event_type, void *component, StringBuffer value)
+{
+SideMenu self = (SideMenu)component;
+char	 *value_ptr;
+int	 sel;
+
+	if(nullAssert(value)) return 0;
+
+	value_ptr = stringBufferGetBuffer(value);
+
+	errLogf("sideMenuMouseOverHandler >%s<\n", value_ptr);
+
+	sel = atoi(value_ptr);
+
+	if(sel<1000){
+		self->hover0 = sel;
+	};
+
+	return 0;
+}
+
 int sideMenuLoadFromUrl(SideMenu  self, char *url)
 {
 	if(nullAssert(self)) return -1;
@@ -70,23 +114,9 @@ int sideMenuLoadFromUrl(SideMenu  self, char *url)
 	return 0;
 }
 
-int sideMenuClickHandler(StringBuffer event_type, void *component, StringBuffer value)
+He static sideMenuItem(SideMenu self, JsonValue menu_item, int selected, char *cmd, ...)
 {
-SideMenu self = (SideMenu)component;
-char	*value_ptr;
-
-	if(nullAssert(value)) return 0;
-
-	value_ptr = stringBufferGetBuffer(value);
-
-	errLogf("sideMenuClickHandler >%s<\n", value_ptr);
-
-	return 0;
-}
-
-He static sideMenuItem(SideMenu self, JsonValue menu_item, int selected, ...)
-{
-char *title, *icon, *href;
+char *title, *icon, *href, *msg;
 
 	if(menu_item == NULL || jsonValueGetType(menu_item)!=JSON_OBJECT) return {% <li /> %};
 
@@ -95,15 +125,16 @@ char *title, *icon, *href;
 	href  = jsonValueGetAsString(jsonValueGet_k(menu_item, "href"));
 
 	return {%
-	<li class={{"cx-sidemenu-item cx-sidemenu-item-%sselected", selected ? "" : "un"}} onClick=sideMenuClickHandler(("C"))>
+	<li class={{"cx-sidemenu-item cx-sidemenu-item-%sselected", selected ? "" : "un"}} onClick=sideMenuClickHandler(({cmd})) onMouseOver=sideMenuMouseOverHandler(({cmd}))>
 		<a href={href}> <i class={icon} />  <span class="cx-sidemenu-title"> {title} </span> </a>
 	</li>
 	%};
 }
 
-He static sideMenuBar(SideMenu self, JsonValue menu, int sel, ...)
+He static sideMenuBar(SideMenu self, JsonValue menu, int level, int sel, ...)
 {
 JsonValue	items, menu_item;
+char		*cmd;
 int		c;
 He		ulist;
 
@@ -116,18 +147,13 @@ He		ulist;
 
 	for(c=0; c<jsonValueGetLength(items); c++){
 		menu_item = jsonValueGet_i(items, c);
-		heAddChild(ulist, {% <sideMenuItem(self, menu_item, c == sel) /> %});
+		cmd = strf("%d", level*1000+c);
+		heAddChild(ulist, {% <sideMenuItem(self, menu_item, c == sel, cmd) /> %});
+		if(cmd) free(cmd);
 	}
 
 	return ulist;
 }
-
-/*
-			<div class="keyboard_button" onClick=sideMenuClickHandler(("C"))> C </div>
-			<div class="keyboard_button" onClick=sideMenuClickHandler(("X"))> CE </div>
-			<div class="keyboard_button" onClick=sideMenuClickHandler((""))>  </div>
-			<div class="keyboard_button" onClick=sideMenuClickHandler(("/"))> / </div>
-*/
 
 He sideMenuRender(HComponent component)
 {
@@ -142,21 +168,21 @@ He		menu, style;
 	menu = {%
 		<div class="cx-sidemenu">
 			<div class="cx-sidemenu-level0">
-				<sideMenuBar(self, self->menu, self->sel0) />
+				<sideMenuBar(self, self->menu, 0, self->sel0) />
 			</div>
 		</div>
 	%};
 
-	if(self->hover0 == -1){
-		items = jsonValueGet_k(self->menu,"items");
-		if(jsonValueGetType(items)==JSON_ARRAY) {
-			menu_item = jsonValueGet_i(items, self->sel0);
-			heAddChild(menu, {%
-				<div class="cx-sidemenu-level1">
-					<sideMenuBar(self, menu_item, self->sel1) />
-				</div>
-			%});
-		}
+	items = jsonValueGet_k(self->menu,"items");
+	if(jsonValueGetType(items)==JSON_ARRAY) {
+		menu_item = jsonValueGet_i(items, self->hover0 >= 0 ? self->hover0 : self->sel0);
+		errLogf("CATATATUIA: %d\n", self->hover0);
+		//menu_item = jsonValueGet_i(items, 2);
+		heAddChild(menu, {%
+			<div class="cx-sidemenu-level1">
+				<sideMenuBar(self, menu_item, 1, self->sel1) />
+			</div>
+		%});
 	}
 
 	return menu;

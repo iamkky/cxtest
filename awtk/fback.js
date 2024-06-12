@@ -76,6 +76,12 @@ var face = el.t;
 				}else if(attr.n == "onMouseDown"){
 					const h = parseHandlerCoding(attr.v);
 					elnew.addEventListener('mousedown', function(event){handler(event, h.v, h.p, h.c, el.i)});
+				}else if(attr.n == "onMouseOver"){
+					const h = parseHandlerCoding(attr.v);
+					elnew.addEventListener('mouseover', function(event){handler(event, h.v, h.p, h.c, el.i)});
+				}else if(attr.n == "onMouseOut"){
+					const h = parseHandlerCoding(attr.v);
+					elnew.addEventListener('mouseout', function(event){handler(event, h.v, h.p, h.c, el.i)});
 				}else{
 					elnew.setAttribute(attr.n, attr.v);
 				}

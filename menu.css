@@ -17,6 +17,7 @@
 	display: flex;
 	justify-content: center;
 	min-height: calc(6.2em * var(--cx-sidemenu-scale));
+	min-width: calc(6.2em * var(--cx-sidemenu-scale));
 	list-style: none;
 	align-items: center;
 	text-align: center;
