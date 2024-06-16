@@ -12,7 +12,7 @@ Class(Calc) {
 	int		decimalFlag;
 };
 
-Constructor(Calc, JsonValue attributes);
+Constructor(Calc, AData attributes);
 Destructor(Calc);
 
 He	calcRender(HComponent self);
@@ -20,7 +20,7 @@ int	calcClickHandler(StringBuffer event_type, void *component, StringBuffer valu
 
 //ENDX
 
-Constructor(Calc, JsonValue attributes)
+Constructor(Calc, AData attributes)
 {
 	CInit(Calc);
 	HComponentConstructor((HComponent)self, attributes);

@@ -16,14 +16,14 @@
 
 Class(JsonTable) {
 	HComponent_st   super;
-	JsonValue	table;
+	AData	table;
 	int		nfields;
 	AVec		fields;
 	char		**sortFields;
 	int		sorted;
 };
 
-Constructor(JsonTable, JsonValue attributes);
+Constructor(JsonTable, AData attributes);
 Destructor(JsonTable);
 
 He	jsonTableRender(HComponent component);
@@ -34,7 +34,7 @@ int	jsonTableLoadFromUrl(JsonTable self, char *url);
 int static jsonTableDetectFields(JsonTable self);
 int static jsonTableDataFetchHandler(void *component, StringBuffer sb);
 
-Constructor(JsonTable, JsonValue attributes)
+Constructor(JsonTable, AData attributes)
 {
 char *url = NULL;
 
@@ -60,7 +60,7 @@ Destructor(JsonTable)
 {
 	if(nullAssert(self)) return;
 
-	jsonValueFree(self->table);
+	ADataFree(self->table);
 	AVecFree(self->fields);
 	free(self);
 }
@@ -71,7 +71,7 @@ Destructor(JsonTable)
 int static jsonTableDataFetchHandler(void *component, StringBuffer sb)
 {
 JsonTable  self = (JsonTable)component;
-JsonValue  j;
+AData  j;
 JsonParser jp;
 int lcount, result;
 
@@ -109,7 +109,7 @@ char	  dir = '+';
 
 int static jsonTableDetectFields(JsonTable self)
 {
-JsonValue	row;
+AData	row;
 int		cc, nn;
 
 	if(nullAssert(self)) return -1;
@@ -121,15 +121,15 @@ int		cc, nn;
 
 	self->fields = CNew(AVec);
 
-	if(jsonValueGetType(self->table) != JSON_ARRAY) return -1;
+	if(aDataGetType(self->table) != ADATA_ARRAY) return -1;
 
-	for(nn=0; nn<jsonValueGetLength(self->table); nn++){
-		row = jsonValueGet_i(self->table, nn);
+	for(nn=0; nn<aDataGetSize(self->table); nn++){
+		row = aDataGet_i(self->table, nn);
 
-		if(row==NULL || jsonValueGetType(row)!=JSON_OBJECT) continue;
+		if(row==NULL || aDataGetType(row)!=ADATA_OBJECT) continue;
 
-		for(cc=0; cc<jsonValueGetLength(row); cc++){
-			aVecAppend(self->fields, jsonValueGet_ik(row, cc));
+		for(cc=0; cc<aDataGetSize(row); cc++){
+			aVecAppend(self->fields, aDataGet_ik(row, cc));
 		}
 
 		break;
@@ -162,19 +162,19 @@ He jsonTableRender(HComponent component)
 {
 JsonTable	self = (JsonTable)component;
 He		htable, hrow, hcell, dir, list;
-JsonValue	field, row, l;
+AData	field, row, l;
 int		n, f;
 
 	if(nullAssert(self) || nullAssert(self->table)) {
 		return {% <div class="cx-jsontable"> No Table </div> %};
 	}
 
-	if(jsonValueGetType(self->table) != JSON_ARRAY) {
+	if(aDataGetType(self->table) != ADATA_ARRAY) {
 		return {% <div class="cx-jsontable"> No Table </div> %};
 	}
 
 	if(!self->sorted){
-		//jsonValueObjectArraySort(self->table, self->sortFields);
+		//aDataObjectArraySort(self->table, self->sortFields);
 		self->sorted = 1;
 	}
 
@@ -189,16 +189,16 @@ int		n, f;
 	}
 	heAddChild(htable, hrow);
 
-	for(n=0; n<jsonValueGetLength(self->table); n++){
-		row = jsonValueGet_i(self->table, n);
-		if(row==NULL || jsonValueGetType(row)!=JSON_OBJECT) continue;
+	for(n=0; n<aDataGetSize(self->table); n++){
+		row = aDataGet_i(self->table, n);
+		if(row==NULL || aDataGetType(row)!=ADATA_OBJECT) continue;
 		heAddChild(htable, hrow = {% <tr class="teste_row"> </tr> %} );
 		for(f=0; f<aVecGetSize(self->fields); f++){
-			field = jsonValueGet_k(row, aVecGetItem(self->fields, f));
+			field = aDataGet_k(row, aVecGetItem(self->fields, f));
 			heAddChild(hrow, {%
 					<td class="table_header"> 
 						<div class={n%2?"table_cell table_even":"table_cell table_pair"}>
-						{jsonValueGetAsString(field)}
+						{aDataGetAsString(field)}
  						</div>
 					</td>
 				%}

@@ -71,7 +71,7 @@ He	e;
 wasmExport
 void createComponent(StringBuffer id, StringBuffer format, StringBuffer attributes)
 {
-JsonValue attr;
+AData attr;
 
 	if(nullAssert(id)){
 		errLogf("createComponent: NULL id (stringbuffer)");

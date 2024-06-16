@@ -9,7 +9,7 @@ Class(Slider) {
 	double		position;
 };
 
-Constructor(Slider, JsonValue attributes);
+Constructor(Slider, AData attributes);
 Destructor(Slider);
 
 He	sliderRender(HComponent self);
@@ -17,7 +17,7 @@ int	sliderClickHandler(StringBuffer event_type, void *component, StringBuffer va
 
 //ENDX
 
-Constructor(Slider, JsonValue attributes)
+Constructor(Slider, AData attributes)
 {
 	CInit(Slider);
 	HComponentConstructor((HComponent)self, attributes);
