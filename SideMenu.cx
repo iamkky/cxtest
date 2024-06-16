@@ -126,7 +126,7 @@ char *title, *icon, *href, *msg;
 
 	return {%
 	<li class={{"cx-sidemenu-item cx-sidemenu-item-%sselected", selected ? "" : "un"}} onClick=sideMenuClickHandler(({cmd})) onMouseOver=sideMenuMouseOverHandler(({cmd}))>
-		<a href={href}> <i class={icon} />  <span class="cx-sidemenu-title"> {title} </span> </a>
+		<a onClick=javascript:sideMenuCallback(({href}))> <i class={icon} />  <span class="cx-sidemenu-title"> {title} </span> </a>
 	</li>
 	%};
 }

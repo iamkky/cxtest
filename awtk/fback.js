@@ -19,24 +19,63 @@ function fbackStatLog()
 
 function parseHandlerCoding(str)
 {
-const decoded = {p:"", c:"", v:""};
+const decoded = {type:"", p:"", c:"", v:""};
 
 	const fp0 = str.indexOf(":");
 	if(fp0<0) return null;
-	decoded.p = str.substring(0, fp0);
+	decoded.type = str.substring(0, fp0);
 
-	const fp1 = str.indexOf(":", fp0+1);
-	if(fp1<0) return null;
-	decoded.c = str.substring(fp0+1, fp1);
+	if(decoded.type == "C"){
+		const fp1 = str.indexOf(":", fp0+1);
+		if(fp1<0) return null;
+		decoded.p = str.substring(fp0+1, fp1);
 
-	decoded.v = str.substring(fp1+1);
+		fp2 = str.indexOf(":", fp1+1);
+		if(fp2<0) return null;
+		decoded.c = str.substring(fp1+1, fp2);
+
+		decoded.v = str.substring(fp2+1);
+	}
+
+	// In the JS handlers will have a different format
+	if(decoded.type == "JS"){
+		const fp1 = str.indexOf(":", fp0+1);
+		if(fp1<0) return null;
+		decoded.p = str.substring(fp0+1, fp1);
+
+		fp2 = str.indexOf(":", fp1+1);
+		if(fp2<0) return null;
+		decoded.c = str.substring(fp1+1, fp2);
+
+		decoded.v = str.substring(fp2+1);
+	}
 
 	//console.log("parseHandlerCoding");
 	//console.log(decoded);
 	return decoded;
 }
 
-var kkk = 0;
+function isEventName(name)
+{
+	switch(name){
+	case "onClick":		return "click";
+	case "onMouseDown":	return "mousedown";
+	case "onMouseOver":	return "mouseover";
+	case "onMouseOut":	return "mouseOut";
+	}
+
+	return "";
+}
+
+function fbackRenderJavascriptHandlerWrapper(element, event_name, handler_data)
+{
+	console.log("fbackRenderJavascriptHandlerWrapper: "+event_name);
+	if(window[handler_data.p] === undefined){
+		console.log("fbackRenderJavascriptHandlerWrapper: undefined function: "+handler_data.p);
+	}else{
+		element.addEventListener(event_name, function(event){window[handler_data.p](handler_data.v);});
+	}
+}
 
 function fbackRenderReplace(module, level, node, el, handler)
 {
@@ -70,18 +109,15 @@ var face = el.t;
 			var index = 0;
 			while(index < el.at.length) { 
 				attr = el.at[index];
-				if(attr.n == "onClick"){
+				const event_name = isEventName(attr.n);
+				console.log("Event: "+attr.n+"   "+event_name);
+				if(event_name != ""){
 					const h = parseHandlerCoding(attr.v);
-					elnew.addEventListener('click', function(event){handler(event, h.v, h.p, h.c, el.i)});
-				}else if(attr.n == "onMouseDown"){
-					const h = parseHandlerCoding(attr.v);
-					elnew.addEventListener('mousedown', function(event){handler(event, h.v, h.p, h.c, el.i)});
-				}else if(attr.n == "onMouseOver"){
-					const h = parseHandlerCoding(attr.v);
-					elnew.addEventListener('mouseover', function(event){handler(event, h.v, h.p, h.c, el.i)});
-				}else if(attr.n == "onMouseOut"){
-					const h = parseHandlerCoding(attr.v);
-					elnew.addEventListener('mouseout', function(event){handler(event, h.v, h.p, h.c, el.i)});
+					if(h.type=="C"){
+						elnew.addEventListener(event_name, function(event){handler(event, h.v, h.p, h.c, el.i)});
+					}else{
+						fbackRenderJavascriptHandlerWrapper(elnew, event_name, h);
+					}
 				}else{
 					elnew.setAttribute(attr.n, attr.v);
 				}
