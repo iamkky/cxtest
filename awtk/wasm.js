@@ -53,8 +53,8 @@ function awtkModule() {
 	}
 
 	this.wasmGetString = function(ws) {
-		const len = this.exports.stringBufferLength_(ws);
-		const p   = this.exports.stringBufferGetBuffer_(ws);
+		const len = this.exports.aStringLength_(ws);
+		const p   = this.exports.aStringGetBuffer_(ws);
 		const uint8 = new Uint8Array(this.memory.buffer, p, len);
 
 		return (new TextDecoder()).decode(uint8);
@@ -64,20 +64,20 @@ function awtkModule() {
 		const encoder = new TextEncoder();
 		const view = encoder.encode(str);
 		const len = view.length;
-		const ws = this.exports.StringBufferNew_(len+1);
+		const ws = this.exports.AStringNew_(len+1);
 	
 		if(ws>0){
-			const p = this.exports.stringBufferGetBuffer_(ws);
+			const p = this.exports.aStringGetBuffer_(ws);
 			const uint8 = new Uint8Array(this.memory.buffer, p, len+1);
 			uint8.set(view);
 			uint8[len] = 0;
-	 		this.exports.stringBufferHardsetLength_(ws, len);
+	 		this.exports.aStringHardsetLength_(ws, len);
 		}
 		return ws;
 	}
 
 	this.wasmStringFree = function(ws) {
-		this.exports.stringBufferFree_(ws);
+		this.exports.aStringFree_(ws);
 	}
 
 	this.consoleLogMsg =  function(str)
@@ -101,8 +101,8 @@ function awtkModule() {
 		console.log("V: "+value+" P:"+pointer+" C:"+component+" id:"+id);
 		ret = this.exports.globalHandler_(event_type, pointer, component, value_sb);
 		console.log(ret);
-		this.exports.stringBufferFree_(event_type);
-		this.exports.stringBufferFree_(value_sb);
+		this.exports.aStringFree_(event_type);
+		this.exports.aStringFree_(value_sb);
 	}
 
 	this.wasmFetchHandler = function(response, component, handler)
@@ -113,7 +113,7 @@ function awtkModule() {
 		console.log(">>>> wasmFetchHandler 2 >>>>");
 		this.exports.globalFetchHandler2(response_ws, component, handler);	
 		console.log(">>>> wasmFetchHandler 3 >>>>");
-		this.exports.stringBufferFree_(response_ws);
+		this.exports.aStringFree_(response_ws);
 		console.log(">>>> wasmFetchHandler 4 >>>>");
 	}
 

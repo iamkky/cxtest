@@ -13,7 +13,7 @@ Constructor(Slider, AData attributes);
 Destructor(Slider);
 
 He	sliderRender(HComponent self);
-int	sliderClickHandler(StringBuffer event_type, void *component, StringBuffer value);
+int	sliderClickHandler(AString event_type, void *component, AString value);
 
 //ENDX
 
@@ -34,7 +34,7 @@ Destructor(Slider)
 	free(self);
 }
 
-int sliderClickHandler(StringBuffer event_type, void *component, StringBuffer value)
+int sliderClickHandler(AString event_type, void *component, AString value)
 {
 Slider self = (Slider)component;
 

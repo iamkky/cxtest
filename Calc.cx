@@ -16,7 +16,7 @@ Constructor(Calc, AData attributes);
 Destructor(Calc);
 
 He	calcRender(HComponent self);
-int	calcClickHandler(StringBuffer event_type, void *component, StringBuffer value);
+int	calcClickHandler(AString event_type, void *component, AString value);
 
 //ENDX
 
@@ -41,7 +41,7 @@ Destructor(Calc)
 	free(self);
 }
 
-int calcClickHandler(StringBuffer event_type, void *component, StringBuffer value)
+int calcClickHandler(AString event_type, void *component, AString value)
 {
 Calc self = (Calc)component;
 char	ch;
@@ -49,9 +49,9 @@ char	ch;
 
 	errLogf("Teste char >%s<\n", value->buffer);
 	if(value==NULL) return 0;
-	if(value->buffer==NULL) return 0;
+	if(aStringGetBuffer(value)==NULL) return 0;
 
-	ch = *(value->buffer);
+	ch = *(aStringGetBuffer(value));
 
 	switch(ch){
 	case '+':

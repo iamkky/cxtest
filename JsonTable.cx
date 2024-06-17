@@ -32,7 +32,7 @@ int	jsonTableLoadFromUrl(JsonTable self, char *url);
 //ENDX
 
 int static jsonTableDetectFields(JsonTable self);
-int static jsonTableDataFetchHandler(void *component, StringBuffer sb);
+int static jsonTableDataFetchHandler(void *component, AString sb);
 
 Constructor(JsonTable, AData attributes)
 {
@@ -68,7 +68,7 @@ Destructor(JsonTable)
 ///// Handlers
 /////
 
-int static jsonTableDataFetchHandler(void *component, StringBuffer sb)
+int static jsonTableDataFetchHandler(void *component, AString sb)
 {
 JsonTable  self = (JsonTable)component;
 AData  j;

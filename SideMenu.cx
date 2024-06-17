@@ -18,7 +18,7 @@ Constructor(SideMenu, AData attributes);
 Destructor(SideMenu);
 
 He	sideMenuRender(HComponent self);
-int	sideMenuClickHandler(StringBuffer event_type, void *component, StringBuffer value);
+int	sideMenuClickHandler(AString event_type, void *component, AString value);
 int	sideMenuLoadFromUrl(SideMenu  self, char *url);
 
 //ENDX
@@ -50,7 +50,7 @@ Destructor(SideMenu)
 	free(self);
 }
 
-int static sideMenuDataFetchHandler(void *component, StringBuffer sb)
+int static sideMenuDataFetchHandler(void *component, AString sb)
 {
 SideMenu   self = (SideMenu)component;
 
@@ -62,7 +62,7 @@ SideMenu   self = (SideMenu)component;
 	return 0;
 } 
 
-int sideMenuClickHandler(StringBuffer event_type, void *component, StringBuffer value)
+int sideMenuClickHandler(AString event_type, void *component, AString value)
 {
 SideMenu self = (SideMenu)component;
 char	 *value_ptr;
@@ -70,7 +70,7 @@ int	 sel;
 
 	if(nullAssert(value)) return 0;
 
-	value_ptr = stringBufferGetBuffer(value);
+	value_ptr = aStringGetBuffer(value);
 
 	errLogf("sideMenuClickHandler >%s<\n", value_ptr);
 
@@ -84,7 +84,7 @@ int	 sel;
 	return 0;
 }
 
-int sideMenuMouseOverHandler(StringBuffer event_type, void *component, StringBuffer value)
+int sideMenuMouseOverHandler(AString event_type, void *component, AString value)
 {
 SideMenu self = (SideMenu)component;
 char	 *value_ptr;
@@ -92,7 +92,7 @@ int	 sel;
 
 	if(nullAssert(value)) return 0;
 
-	value_ptr = stringBufferGetBuffer(value);
+	value_ptr = aStringGetBuffer(value);
 
 	errLogf("sideMenuMouseOverHandler >%s<\n", value_ptr);
 

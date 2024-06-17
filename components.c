@@ -8,7 +8,7 @@
 
 #include <abd/new.h>
 
-#include <abd/StringBuffer.h>
+#include <abd/AString.c.h>
 #include <helium/He.h>
 
 #include <awtk/api.h>
@@ -27,10 +27,10 @@
 HComponent	component_list[MAX_COMPONENT];
 int		component_list_size;
 
-//int globalHandlerHook(int type, StringBuffer void *component, StringBuffer value)
-int globalHandlerHook(int type, StringBuffer event_type, void *component, StringBuffer value)
+//int globalHandlerHook(int type, AString void *component, AString value)
+int globalHandlerHook(int type, AString event_type, void *component, AString value)
 {
-StringBuffer	json_str, id_str;
+AString	json_str, id_str;
 char		*id;
 He	e;
 
@@ -42,7 +42,7 @@ He	e;
 		e = hcomponentRender((HComponent)component);
 
         	//memMonitor((char *)0x34dd0, 16);
-		json_str = StringBufferNew(2000);
+		json_str = CNew(AString,2000);
 
 		errLogf("RenderJson");
 		heRenderJson(e, json_str);
@@ -53,13 +53,13 @@ He	e;
 		id = hcomponentGetId(((HComponent)component));
 		errLogf("Component id: %s",id);
 
-		id_str = StringBufferNew(128);
-		stringBufferAddStr(id_str, id);
+		id_str = CNew(AString,128);
+		aStringAddStr(id_str, id);
 
 		fbackRenderWasm(id_str, json_str);
 
-		stringBufferFree(json_str);
-		stringBufferFree(id_str);
+		AStringFree(json_str);
+		AStringFree(id_str);
 	}else{
 		errLogf("No component to render");
 	}
@@ -69,7 +69,7 @@ He	e;
 }
 
 wasmExport
-void createComponent(StringBuffer id, StringBuffer format, StringBuffer attributes)
+void createComponent(AString id, AString format, AString attributes)
 {
 AData attr;
 
@@ -78,7 +78,7 @@ AData attr;
 		return;
 	}
 
-	if(nullAssert(stringBufferGetBuffer(id))){
+	if(nullAssert(aStringGetBuffer(id))){
 		errLogf("createComponent: NULL id (buffer)");
 		return;
 	}
@@ -89,29 +89,29 @@ AData attr;
 	}
 
 	if(attributes){
-		errLogf("attributes %s", stringBufferGetBuffer(attributes));
+		errLogf("attributes %s", aStringGetBuffer(attributes));
 	}
 
-	if(stringBufferLength(attributes)>0){
+	if(aStringLength(attributes)>0){
 		attr = awtkParsesJson(attributes);
 	}else{
 		attr = NULL;
 	}
 
-	if(!stringBufferCompare(format,"Calc")){
+	if(!aStringCompare(format,"Calc")){
 		component_list[component_list_size] = (HComponent)CNew(Calc, attr);
-	}else if(!stringBufferCompare(format,"Slider")){
+	}else if(!aStringCompare(format,"Slider")){
 		component_list[component_list_size] = (HComponent)CNew(Slider, attr);
-	}else if(!stringBufferCompare(format,"SideMenu")){
+	}else if(!aStringCompare(format,"SideMenu")){
 		component_list[component_list_size] = (HComponent)CNew(SideMenu, attr);
-	}else if(!stringBufferCompare(format,"JsonTable")){
+	}else if(!aStringCompare(format,"JsonTable")){
 		//component_list[component_list_size] = (HComponent)CNew(JsonTable, "json/employee.json");
 		component_list[component_list_size] = (HComponent)CNew(JsonTable, attr);
 	}else{
-		errLogf("Unknow component %s", stringBufferGetBuffer(format));
+		errLogf("Unknow component %s", aStringGetBuffer(format));
 		return;
 	}
-	hcomponentSetId(component_list[component_list_size], stringBufferGetBuffer(id));
+	hcomponentSetId(component_list[component_list_size], aStringGetBuffer(id));
         globalHandlerHook(0, NULL, component_list[component_list_size], NULL);
 	component_list_size++;
 	return;
@@ -120,7 +120,7 @@ AData attr;
 wasmExport
 void moduleStart()
 {
-StringBuffer	id_str;
+AString	id_str;
 int c;
 
 	// wasmApiInit() does nothing!
