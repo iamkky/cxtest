@@ -9,7 +9,7 @@
 
 Class(SideMenu) {
 	HComponent_st	super;
-	AData	menu;
+	AData		menu;
 	int		sel0, sel1;
 	int		hover0, hover1;
 };
@@ -57,7 +57,6 @@ SideMenu   self = (SideMenu)component;
 	if(nullAssert(self)) return -1;
 
 	self->menu = awtkParsesJson(sb);
-	//aDataPrint(self->menu);
 
 	return 0;
 } 
@@ -76,10 +75,8 @@ int	 sel;
 
 	sel = atoi(value_ptr);
 
-	if(sel>=1000){
-		self->sel0 = sel/1000;
-		self->sel1 = sel - 1000 * self->sel0;
-	}
+	self->sel0 = sel/1000;
+	self->sel1 = sel - 1000 * self->sel0;
 
 	return 0;
 }
@@ -114,7 +111,7 @@ int sideMenuLoadFromUrl(SideMenu  self, char *url)
 	return 0;
 }
 
-He static sideMenuItem(SideMenu self, AData menu_item, int selected, char *cmd, ...)
+He static sideMenuItem(SideMenu self, AData menu_item, int selected, char *cmd, int last, ...)
 {
 char *title, *icon, *href, *msg;
 
@@ -124,19 +121,27 @@ char *title, *icon, *href, *msg;
 	icon  = aDataGetAsString(aDataGet_k(menu_item, "icon"));
 	href  = aDataGetAsString(aDataGet_k(menu_item, "href"));
 
-	return {%
-	<li class={{"cx-sidemenu-item cx-sidemenu-item-%sselected", selected ? "" : "un"}} onClick=sideMenuClickHandler(({cmd})) onMouseOver=sideMenuMouseOverHandler(({cmd}))>
-		<a onClick=javascript:sideMenuCallback(({href}))> <i class={icon} />  <span class="cx-sidemenu-title"> {title} </span> </a>
-	</li>
-	%};
+	if(last){
+		return {%
+		<li class={{"cx-sidemenu-item cx-sidemenu-item-%sselected", selected ? "" : "un"}} onClick=sideMenuClickHandler(({cmd}))>
+			<a onClick=javascript:sideMenuCallback(({href}))> <i class={icon} />  <span class="cx-sidemenu-title"> {title} </span> </a>
+		</li>
+		%};
+	}else{
+		return {%
+		<li class={{"cx-sidemenu-item cx-sidemenu-item-%sselected", selected ? "" : "un"}} onMouseOver=sideMenuMouseOverHandler(({cmd}))>
+			<a> <i class={icon} />  <span class="cx-sidemenu-title"> {title} </span> </a>
+		</li>
+		%};
+	}
 }
 
-He static sideMenuBar(SideMenu self, AData menu, int level, int sel, ...)
+He static sideMenuBar(SideMenu self, AData menu, int level, int parent, int sel, int last, ...)
 {
 AData	items, menu_item;
-char		*cmd;
-int		c;
-He		ulist;
+char	*cmd;
+int	c;
+He	ulist;
 
 	ulist = {% <ul class="cx-sidemenu-bar"> </ul> %};
 
@@ -147,8 +152,8 @@ He		ulist;
 
 	for(c=0; c<aDataGetSize(items); c++){
 		menu_item = aDataGet_i(items, c);
-		cmd = strf("%d", level*1000+c);
-		heAddChild(ulist, {% <sideMenuItem(self, menu_item, c == sel, cmd) /> %});
+		cmd = strf("%d", parent*1000+c);
+		heAddChild(ulist, {% <sideMenuItem(self, menu_item, c == sel, cmd, last) /> %});
 		if(cmd) free(cmd);
 	}
 
@@ -158,9 +163,8 @@ He		ulist;
 He sideMenuRender(HComponent component)
 {
 SideMenu	self = (SideMenu)component;
-
-AData	tmp, second_menu, items, menu_item;
-int		c;
+AData		tmp, second_menu, items, menu_item;
+int		c, to_show;
 He		menu, style;
 
 	if(nullAssert(self) || aDataGetType(self->menu)!=ADATA_OBJECT) return {% <div class="cx-sidemenu"> no menu </div> %};
@@ -168,18 +172,20 @@ He		menu, style;
 	menu = {%
 		<div class="cx-sidemenu">
 			<div class="cx-sidemenu-level0">
-				<sideMenuBar(self, self->menu, 0, self->sel0) />
+				<sideMenuBar(self, self->menu, 0, 0, self->sel0, 0) />
 			</div>
 		</div>
 	%};
 
 	items = aDataGet_k(self->menu,"items");
 	if(aDataGetType(items)==ADATA_ARRAY) {
-		menu_item = aDataGet_i(items, self->hover0 >= 0 ? self->hover0 : self->sel0);
-		errLogf("CATATATUIA: %d\n", self->hover0);
+
+		to_show = self->hover0 >= 0 ? self->hover0 : self->sel0;
+		menu_item = aDataGet_i(items, to_show);
+
 		heAddChild(menu, {%
 			<div class="cx-sidemenu-level1">
-				<sideMenuBar(self, menu_item, 1, self->sel1) />
+				<sideMenuBar(self, menu_item, 1, to_show, to_show == self->sel0 ? self->sel1 : -1, 1) />
 			</div>
 		%});
 	}

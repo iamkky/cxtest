@@ -168,14 +168,3 @@ async function awtkStartModule(url)
 	return mod;
 }
 
-/*
-const myWasmModule = new WasmModule();
-myWasmModule.load('example.wasm')
-	.then(instance => {
-		console.log('WebAssembly module loaded', instance);
-		myWasmModule.startUp();
-	})
-	.catch(error => {
-		console.error(error);
-	});
-*/
